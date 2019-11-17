@@ -13,7 +13,7 @@ local categoryListLayout = Instance.new("UIListLayout", categoryBodyFrame);
 local topPaddingFrame = Instance.new("Frame", mainFrame);
 local backgroundFrame = Instance.new("Frame", mainFrame);
 local bodyFrames = {};
-local watermarkLabel = Instance.new("ImageLabel", ShouxLib)
+local watermarkLabel = Instance.new("ImageLabel", ShouxLibGui)
 local watermarkAspectratioConstraint = Instance.new("UIAspectRatioConstraint", watermarkLabel)
 
 ShouxLibGui.Name = "ShouxLibGui";
