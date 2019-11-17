@@ -221,7 +221,7 @@ function ShouxLib:new(title, backgroundColor, textColor)
     categoryBtn.Size = UDim2.new(1, 0, 1, 0);
     categoryBtn.Font = Enum.Font.SourceSansLight;
     categoryBtn.Text = string.upper(title);
-    categoryBtn.TextColor3 = textColor or Color3.fromRGB(153, 95, 39);
+    categoryBtn.TextColor3 = textColor or Color3.fromRGB(255, 255, 255);
     categoryBtn.TextScaled = true;
     categoryBtn.TextWrapped = true;
     categoryBtn.ZIndex = 3;
@@ -280,19 +280,26 @@ function ShouxLib.Content:newBtn(title, callback, noToggle)
     end;
 
     self:initBtnEffect(btn);
-
+    local toggle = {
+        [true]=Color3.fromRGB(0, 194, 94);
+        [false]=Color3.fromRGB(180, 0, 0)
+    }
     btn.MouseButton1Click:Connect(function()
         self:Ripple(btn);
         enabled = not enabled;
         if not noToggle then
-            if enabled then
-                game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(0, 194, 94)}):Play();
-            elseif not enabled then
-                game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(180, 0, 0)}):Play();
-            end;
+            game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggles[enabled]}):Play();
         end;
         callback(enabled);
     end);
+    return {
+        Set = function(self, bool) enabled=bool if not noToggle then
+                game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggles[enabled]}):Play();
+                callback(enabled);
+            end
+        end
+    }
+
 end;
 
 function ShouxLib.Content:newSlider(title, callback, min, max, startPoint)
@@ -662,9 +669,7 @@ function ShouxLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = Instance.new("ImageLabel", hueSatFrame);
     local valueFrame = Instance.new("ImageLabel", colorPickingFrame);
     local valueIndicatorFrame = Instance.new("Frame", valueFrame);
-	
     callback(presetColor and presetColor or Color3.fromRGB(255, 255, 255));
-	
     btn.Name = "btn";
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
     btn.BorderSizePixel = 0;
