@@ -516,7 +516,7 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
         activated = false;
         local input, onGui = game:GetService('UserInputService').InputBegan:wait();
         keyCode = input;
-        local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and input.UserInputType.Name or input.KeyCode.Name);
+        local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and (shortNames[input.Name] or input.UserInputType.Name) or input.KeyCode.Name);
         bindBtn.Text = name
         activated=true;
     end);
