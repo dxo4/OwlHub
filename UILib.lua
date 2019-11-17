@@ -422,6 +422,114 @@ function ShouxLib.Content:newBind(title, callback, presetKeyCode)
     end);
 end;
 
+function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
+    local oldcon;
+    local enabled = false;
+    local listening = false;
+    local activated = presetKeyCode and true or false;
+    local banned = {
+        Return = true;
+        Space = true;
+        Tab = true;
+        Unknown = true;
+    }
+    
+    local function isreallypressed(bind, inp)
+        local key = bind
+        if typeof(key) == "Instance" then
+            if key.UserInputType == Enum.UserInputType.Keyboard and inp.KeyCode == key.KeyCode then
+                return true;
+            elseif tostring(key.UserInputType):find('MouseButton') and inp.UserInputType == key.UserInputType then
+                return true
+			end
+        end
+        if tostring(key):find'MouseButton' then
+            return key == inp.UserInputType
+        else
+            return key == inp.KeyCode
+        end
+    end
+
+    local shortNames = {
+        RightControl = 'RightCtrl';
+        LeftControl = 'LeftCtrl';
+        LeftShift = 'LShift';
+        RightShift = 'RShift';
+        MouseButton1 = "Mouse1";
+        MouseButton2 = "Mouse2";
+    }
+    
+    local allowed = {
+        MouseButton1 = true;
+        MouseButton2 = true;
+    }      
+
+    local nm = (presetKeyCode and (shortNames[presetKeyCode.Name] or presetKeyCode.Name) or "None");
+    local keyCode = presetKeyCode;
+    local bindFrame = Instance.new("Frame", self.bodyFrame);
+    local bindBtn = Instance.new("TextButton", bindFrame);
+    local titleLabel = Instance.new("TextLabel", bindFrame);
+
+    bindFrame.Name = "bindFrame";
+    bindFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
+    bindFrame.BorderSizePixel = 0;
+    bindFrame.Size = UDim2.new(1, 0, 0.9, 0);
+
+    bindBtn.Name = "bindBtn";
+    bindBtn.AnchorPoint = Vector2.new(1, 0);
+    bindBtn.BackgroundColor3 = Color3.fromRGB(63, 63, 63);
+    bindBtn.BorderSizePixel = 0;
+    bindBtn.Position = UDim2.new(1, 0, 0, 0);
+    bindBtn.Size = UDim2.new(0.206, 0, 1, 0);
+    bindBtn.AutoButtonColor = false;
+    bindBtn.Font = Enum.Font.SourceSansItalic;
+    bindBtn.Text = nm;
+    bindBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
+    bindBtn.TextScaled = true;
+    bindBtn.TextWrapped = true;
+
+    titleLabel.Name = "titleLabel";
+    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.BorderSizePixel = 0
+    titleLabel.Position = UDim2.new(0.02, 0, 0.5, 0);
+    titleLabel.Size = UDim2.new(0.98, 0, 1, 0);
+    titleLabel.Font = Enum.Font.SourceSansLight;
+    titleLabel.Text = title;
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
+    titleLabel.TextScaled = true;
+    titleLabel.TextWrapped = true;
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
+
+    game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
+        if onGui then return; end;
+
+        if listening and not activated  and (input.UserInputType ~= Enum.UserInputType.Keyboard and (allowed[input.UserInputType.Name])) or (input.KeyCode and (not banned[input.KeyCode.Name])) then 
+            pcall(function()
+                local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and a.UserInputType.Name or a.KeyCode.Name);
+                bindBtn.Text = name
+                listening = false;
+                keyCode = input;
+                activated = true;
+            end);
+		elseif activated and not listening and isreallypressed(input, keyCode) then
+            callback(true);
+        end;
+    end);
+    game:GetService("UserInputService").InputEnded:Connect(function(input, onGui)
+        if onGui then return; end;
+        if activated and not listening and isreallypressed(input, keyCode) then
+            callback(false);
+        end;
+    end);    
+    bindBtn.MouseButton1Click:Connect(function()
+        bindBtn.Text = "...";
+
+        activated = false;
+        listening = true;
+    end);
+end;
+
 function ShouxLib.Content:newDropdown(title, callback, list)
     local dropdownBtn = Instance.new("TextButton", self.bodyFrame);
     local titleLabel = Instance.new("TextLabel", dropdownBtn);
