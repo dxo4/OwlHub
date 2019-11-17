@@ -13,8 +13,8 @@ local categoryListLayout = Instance.new("UIListLayout", categoryBodyFrame);
 local topPaddingFrame = Instance.new("Frame", mainFrame);
 local backgroundFrame = Instance.new("Frame", mainFrame);
 local bodyFrames = {};
-local watermarkLabel = Instance.new("ImageLabel", ShouxLib)
-local watermarkAspectratioConstraint = Instance.new("UIAspectRatioConstraint", watermarkLabel)
+local watermarkLabel = Instance.new("ImageLabel", ShouxLibGui);
+local watermarkAspectratioConstraint = Instance.new("UIAspectRatioConstraint", watermarkLabel);
 
 ShouxLibGui.Name = "ShouxLibGui";
 
@@ -221,7 +221,7 @@ function ShouxLib:new(title, backgroundColor, textColor)
     categoryBtn.Size = UDim2.new(1, 0, 1, 0);
     categoryBtn.Font = Enum.Font.SourceSansLight;
     categoryBtn.Text = string.upper(title);
-    categoryBtn.TextColor3 = textColor or Color3.fromRGB(255, 255, 255);
+    categoryBtn.TextColor3 = textColor or Color3.fromRGB(153, 95, 39);
     categoryBtn.TextScaled = true;
     categoryBtn.TextWrapped = true;
     categoryBtn.ZIndex = 3;
@@ -669,7 +669,9 @@ function ShouxLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = Instance.new("ImageLabel", hueSatFrame);
     local valueFrame = Instance.new("ImageLabel", colorPickingFrame);
     local valueIndicatorFrame = Instance.new("Frame", valueFrame);
+	
     callback(presetColor and presetColor or Color3.fromRGB(255, 255, 255));
+	
     btn.Name = "btn";
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
     btn.BorderSizePixel = 0;
