@@ -13,7 +13,7 @@ local categoryListLayout = Instance.new("UIListLayout", categoryBodyFrame);
 local topPaddingFrame = Instance.new("Frame", mainFrame);
 local backgroundFrame = Instance.new("Frame", mainFrame);
 local bodyFrames = {};
-local watermarkLabel = Instance.new("ImageLabel", ShouxLibGui)
+local watermarkLabel = Instance.new("ImageLabel", ShouxLib)
 local watermarkAspectratioConstraint = Instance.new("UIAspectRatioConstraint", watermarkLabel)
 
 ShouxLibGui.Name = "ShouxLibGui";
@@ -90,12 +90,6 @@ watermarkLabel.ImageTransparency = 0.4
 watermarkLabel.ScaleType = Enum.ScaleType.Crop
 
 watermarkAspectratioConstraint.AspectRatio = 1.073
-
-game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
-    if not onGui and input.KeyCode == Enum.KeyCode.P then
-        mainFrame.Visible = not mainFrame.Visible;
-    end;
-end);
 
 mainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton2 then
@@ -517,13 +511,13 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
                 keyCode = input;
                 activated = true;
             end);
-		elseif activated and not listening and isreallypressed(input, keyCode) then
+		elseif activated and not listening and isreallypressed(keyCode, input) then
             callback(true);
         end;
     end);
     game:GetService("UserInputService").InputEnded:Connect(function(input, onGui)
         if onGui then return; end;
-        if activated and not listening and isreallypressed(input, keyCode) then
+        if activated and not listening and isreallypressed(keyCode, input) then
             callback(false);
         end;
     end);    
