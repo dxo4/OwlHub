@@ -292,14 +292,22 @@ function ShouxLib.Content:newBtn(title, callback, noToggle)
         end;
         callback(enabled);
     end);
-    return {
-        Set = function(self, bool) enabled=bool if not noToggle then
-                game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
-                callback(enabled);
+    if noToggle then
+        return {
+            Fire = function(self) 
+                callback();
+            end    
+        }
+    else    
+        return {
+            Set = function(self, bool) 
+                enabled=bool if not noToggle then
+                    game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+                    callback(enabled);
+                end
             end
-        end
-    }
-
+        }
+    end
 end;
 
 function ShouxLib.Content:newSlider(title, callback, min, max, startPoint)
