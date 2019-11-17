@@ -357,7 +357,7 @@ function ShouxLib.Content:newSlider(title, callback, min, max, startPoint)
 	end);
 end;
 
-function ShouxLib.Content:newBind(title, callback, presetKeyCode, special, special2, special3)
+function ShouxLib.Content:newBind(title, callback, presetKeyCode)
     local enabled = false;
     local listening = false;
     local activated = presetKeyCode and true or false;
@@ -399,51 +399,21 @@ function ShouxLib.Content:newBind(title, callback, presetKeyCode, special, speci
 
     game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
         if onGui then return; end;
-        if special2 then
-            if listening and not activated then
-                pcall(function()
-                    bindBtn.Text = special3;
-                    listening = false;
-                    keyCode = input.UserInputType;
-                    activated = true;
-                end);
-            elseif activated and not listening and input.UserInputType == keyCode then
-                if special then
-                    callback(true);
-                else
-                    enabled = not enabled;
-                    callback(enabled);
-                end   
-            end;
-        else
-            if listening and not activated then
-                pcall(function()
-                    bindBtn.Text = tostring(string.char(input.KeyCode.Value));
-                    listening = false;
-                    keyCode = input.KeyCode;
-                    activated = true;
-                end);
-            elseif activated and not listening and input.KeyCode == keyCode then
-                if special then
-                    callback(true);
-                else
-                    enabled = not enabled;
-                    callback(enabled);
-                end    
-            end;
-        end    
-    end);
-    game:GetService("UserInputService").InputEnded:Connect(function(input, onGui)
-        if onGui then return; end;
-		if activated and not listening and input.KeyCode == keyCode then
+
+        if listening and not activated then
+            pcall(function()
+                bindBtn.Text = tostring(string.char(input.KeyCode.Value));
+                listening = false;
+                keyCode = input.KeyCode;
+                activated = true;
+            end);
+		elseif activated and not listening and input.KeyCode == keyCode then
             enabled = not enabled;
-            if not special then    
-                callback(enabled);
-            else
-                callback(false);
-            end    
+            
+            callback(enabled);
         end;
     end);
+
     bindBtn.MouseButton1Click:Connect(function()
         bindBtn.Text = "...";
 
