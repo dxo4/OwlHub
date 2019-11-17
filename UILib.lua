@@ -221,7 +221,7 @@ function ShouxLib:new(title, backgroundColor, textColor)
     categoryBtn.Size = UDim2.new(1, 0, 1, 0);
     categoryBtn.Font = Enum.Font.SourceSansLight;
     categoryBtn.Text = string.upper(title);
-    categoryBtn.TextColor3 = textColor or Color3.fromRGB(255, 255, 255);
+    categoryBtn.TextColor3 = textColor or Color3.fromRGB(153, 95, 39);
     categoryBtn.TextScaled = true;
     categoryBtn.TextWrapped = true;
     categoryBtn.ZIndex = 3;
