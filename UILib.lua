@@ -620,6 +620,13 @@ function ShouxLib.Content:newDropdown(title, callback, list)
 
         btn.MouseButton1Click:Connect(function()
             callback(v);
+            game:GetService("TweenService"):Create(dropdownImage, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+            dropdownFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            bodyFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            wait(0.15);
+            bodyFrame.Visible = false;
+            dropdownFrame.Visible = false;
+            topPaddingFrame.Visible = false;
         end);
     end;
 
