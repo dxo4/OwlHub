@@ -288,7 +288,7 @@ function ShouxLib.Content:newBtn(title, callback, noToggle)
         self:Ripple(btn);
         enabled = not enabled;
         if not noToggle then
-            game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggles[enabled]}):Play();
+            game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
         end;
         callback(enabled);
     end);
