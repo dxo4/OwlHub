@@ -662,7 +662,9 @@ function ShouxLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = Instance.new("ImageLabel", hueSatFrame);
     local valueFrame = Instance.new("ImageLabel", colorPickingFrame);
     local valueIndicatorFrame = Instance.new("Frame", valueFrame);
-    callback(presetColor);
+	
+    callback(presetColor and presetColor or Color3.fromRGB(255, 255, 255));
+	
     btn.Name = "btn";
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
     btn.BorderSizePixel = 0;
