@@ -91,6 +91,12 @@ watermarkLabel.ScaleType = Enum.ScaleType.Crop
 
 watermarkAspectratioConstraint.AspectRatio = 1.073
 
+game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
+    if not onGui and input.KeyCode == Enum.KeyCode.P then
+        mainFrame.Visible = not mainFrame.Visible;
+    end;
+end);
+
 mainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton2 then
         if not categoryFrame.Visible then
