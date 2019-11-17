@@ -323,7 +323,7 @@ function ShouxLib.Content:newSlider(title, callback, min, max, startPoint)
     titleLabel.TextScaled = true;
     titleLabel.TextWrapped = true;
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
-
+    callback(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0)
     local function slide(input)
         local pos = UDim2.new(math.clamp((input.Position.X - sliderFrame.AbsolutePosition.X) / sliderFrame.AbsoluteSize.X, 0, 1), 0, 1, 0);
         slidingFrame:TweenSize(pos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
@@ -431,37 +431,37 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
         Space = true;
         Tab = true;
         Unknown = true;
-    };
+    }
     
     local function isreallypressed(bind, inp)
-        local key = bind;
+        local key = bind
         if typeof(key) == "Instance" then
             if key.UserInputType == Enum.UserInputType.Keyboard and inp.KeyCode == key.KeyCode then
                 return true;
-            elseif tostring(key.UserInputType):find("MouseButton") and inp.UserInputType == key.UserInputType then
-                return true;
-			end;
-        end;
-        if tostring(key):find"MouseButton" then
-            return key == inp.UserInputType;
+            elseif tostring(key.UserInputType):find('MouseButton') and inp.UserInputType == key.UserInputType then
+                return true
+			end
+        end
+        if tostring(key):find'MouseButton' then
+            return key == inp.UserInputType
         else
-            return key == inp.KeyCode;
-        end;
-    end;
+            return key == inp.KeyCode
+        end
+    end
 
     local shortNames = {
-        RightControl = "RightCtrl";
-        LeftControl = "LeftCtrl";
-        LeftShift = "LShift";
-        RightShift = "RShift";
+        RightControl = 'RightCtrl';
+        LeftControl = 'LeftCtrl';
+        LeftShift = 'LShift';
+        RightShift = 'RShift';
         MouseButton1 = "Mouse1";
         MouseButton2 = "Mouse2";
-    };
+    }
     
     local allowed = {
         MouseButton1 = true;
         MouseButton2 = true;
-    };  
+    }      
 
     local nm = (presetKeyCode and (shortNames[presetKeyCode.Name] or presetKeyCode.Name) or "None");
     local keyCode = presetKeyCode;
@@ -503,7 +503,7 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
     game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
         if onGui then return; end;
 
-        if listening and not activated and (input.UserInputType ~= Enum.UserInputType.Keyboard and (allowed[input.UserInputType.Name])) or (input.KeyCode and (not banned[input.KeyCode.Name])) then 
+        if listening and not activated  and (input.UserInputType ~= Enum.UserInputType.Keyboard and (allowed[input.UserInputType.Name])) or (input.KeyCode and (not banned[input.KeyCode.Name])) then 
             pcall(function()
                 local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and a.UserInputType.Name or a.KeyCode.Name);
                 bindBtn.Text = name
@@ -515,12 +515,6 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
             callback(true);
         end;
     end);
-    game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
-        if onGui then return; end;
-        if activated and not listening and isreallypressed(input, keyCode) then
-            callback(true);
-        end;
-    end);    
     game:GetService("UserInputService").InputEnded:Connect(function(input, onGui)
         if onGui then return; end;
         if activated and not listening and isreallypressed(input, keyCode) then
@@ -543,9 +537,7 @@ function ShouxLib.Content:newDropdown(title, callback, list)
     local dropdownFrame = Instance.new("Frame", dropdownBtn);
     local bodyFrame = Instance.new("Frame", dropdownBtn);
     local UIListLayout = Instance.new("UIListLayout", bodyFrame);
-
-	callback(list[1]);
-
+    callback(list[1]);
     dropdownBtn.Name = "dropdownBtn";
     dropdownBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
     dropdownBtn.BorderSizePixel = 0;
@@ -670,9 +662,7 @@ function ShouxLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = Instance.new("ImageLabel", hueSatFrame);
     local valueFrame = Instance.new("ImageLabel", colorPickingFrame);
     local valueIndicatorFrame = Instance.new("Frame", valueFrame);
-
-	callback(presetColor);
-    
+    callback(presetColor);
     btn.Name = "btn";
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
     btn.BorderSizePixel = 0;
