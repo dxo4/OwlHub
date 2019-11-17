@@ -423,7 +423,6 @@ function ShouxLib.Content:newBind(title, callback, presetKeyCode)
 end;
 
 function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
-    local oldcon;
     local enabled = false;
     local listening = false;
     local activated = presetKeyCode and true or false;
