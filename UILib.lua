@@ -424,7 +424,6 @@ end;
 
 function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
     local enabled = false;
-    local listening = false;
     local activated = presetKeyCode and true or false;
     local banned = {
         Return = true;
@@ -502,16 +501,7 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
 
     game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
         if onGui then return; end;
-
-        if listening and not activated  and (input.UserInputType ~= Enum.UserInputType.Keyboard and (allowed[input.UserInputType.Name])) or (input.KeyCode and (not banned[input.KeyCode.Name])) then 
-            pcall(function()
-                local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and a.UserInputType.Name or a.KeyCode.Name);
-                bindBtn.Text = name
-                listening = false;
-                keyCode = input;
-                activated = true;
-            end);
-		elseif activated and not listening and isreallypressed(keyCode, input) then
+        if activated and isreallypressed(keyCode, input) then
             callback(true);
         end;
     end);
@@ -523,9 +513,12 @@ function ShouxLib.Content:newCBind(title, callback, presetKeyCode)
     end);    
     bindBtn.MouseButton1Click:Connect(function()
         bindBtn.Text = "...";
-
         activated = false;
-        listening = true;
+        local input, onGui = game:GetService('UserInputService').InputBegan:wait();
+        keyCode = input;
+        local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and a.UserInputType.Name or a.KeyCode.Name);
+        bindBtn.Text = name
+        activated=true;
     end);
 end;
 
