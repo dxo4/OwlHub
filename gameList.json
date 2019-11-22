@@ -18,7 +18,8 @@
     "621129760": {"Name": "Knife Ability Test | KAT", "Script": "KnifeAbilityTest.lua"},
     "2609028954": {"Name": "Ruddev's Battle Royale", "Script": "RuddevsBattleRoyale.lua"},
     "855499080": {"Name": "Skywars", "Script": "Skywars.lua"},
-    "1833791864": {"Name": "No Scope Sniping", "Script": "NoScopeSniping.lua"},
+    "2995662128": {"Name": "No Scope Sniping", "Script": "NoScopeSniping.lua"},
+    "2995662128": {"Name": "No Scope Sniping", "Script": "NoScopeSniping.lua"},
     "1238482747": {"Name": "Bullet Hell", "Script": "BulletHell.lua"},
     "379614936": {"Name": "Assassin", "Script": "Assassin.lua"},
     "137885680": {"Name": "Zombie Rush", "Script": "ZombieRush.lua"},
@@ -27,5 +28,8 @@
     "402122991": {"Name": "Redwood Prison", "Script": "RedwoodPrison.lua"},
     "2607077439": {"Name": "Operation Scorpion", "Script": "OperationScorpion.lua"},
     "3970007519": {"Name": "One Piece Ultimate", "Script": "OnePieceUltimate.lua"},
-    "3527629287": {"Name": "BIG Paintball", "Script": "BigPaintball.lua"}
+    "3527629287": {"Name": "BIG Paintball", "Script": "BigPaintball.lua"},
+    "301549746": {"Name": "Counter Blox", "Script": "CounterBlox.lua"},
+    "1480424328": {"Name": "Counter Blox", "Script": "CounterBlox.lua"},
+    "1869597719": {"Name": "Counter Blox", "Script": "CounterBlox.lua"}
 }
