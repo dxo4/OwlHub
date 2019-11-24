@@ -316,6 +316,54 @@ function ShouxLib.Content:newBtn(title, callback, noToggle)
     end
 end;
 
+function ShouxLib.Content:newTextbox(title, callback, presetText)
+    local btn = Instance.new("TextButton", self.bodyFrame);
+    local titleLabel = Instance.new("TextLabel", btn);
+    local textFrame = Instance.new("TextBox", btn);
+	
+	callback(presetText);
+
+    btn.Name = "btn";
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
+    btn.BorderSizePixel = 0;
+    btn.Size = UDim2.new(1, 0, 0.9, 0);
+    btn.AutoButtonColor = false;
+    btn.Font = Enum.Font.SourceSansLight;
+    btn.Text = "";
+    btn.TextScaled = true;
+    btn.TextWrapped = true;
+    btn.ClipsDescendants = true;
+
+    titleLabel.Name = "titleLabel";
+    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
+    titleLabel.BackgroundTransparency = 1;
+    titleLabel.BorderSizePixel = 0;
+    titleLabel.Position = UDim2.new(0.02, 0, 0.5, 0);
+    titleLabel.Size = UDim2.new(0.98, 0, 1, 0);
+    titleLabel.Font = Enum.Font.SourceSansLight;
+    titleLabel.Text = title;
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
+    titleLabel.TextScaled = true;
+    titleLabel.TextWrapped = true;
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
+
+    textFrame.Name = "textFrame";
+    textFrame.AnchorPoint = Vector2.new(1, 0);
+    textFrame.BackgroundColor3 = Color3.fromRGB(63, 63, 63);
+    textFrame.BorderSizePixel = 0;
+    textFrame.Position = UDim2.new(1, 0, 0, 0);
+    textFrame.Size = UDim2.new(0.223, 0, 1, 0);
+    textFrame.Font = Enum.Font.SourceSansItalic;
+    textFrame.Text = presetText and presetText or "";
+    textFrame.TextColor3 = Color3.fromRGB(255, 255, 255);
+    textFrame.TextScaled = true;
+    textFrame.TextWrapped = true;
+
+    textFrame.FocusLost:Connect(function()
+        callback(textFrame.Text);
+    end);
+end;
+
 function ShouxLib.Content:newSlider(title, callback, min, max, startPoint)
     local dragging = false;
     local sliderFrame = Instance.new("Frame", self.bodyFrame);
