@@ -316,12 +316,14 @@ function ShouxLib.Content:newBtn(title, callback, noToggle)
     end
 end;
 
-function ShouxLib.Content:newTextbox(title, callback, presetText)
+function ShouxLib.Content:newTextbox(title, callback, presetText, noCallbackOnStart)
     local btn = Instance.new("TextButton", self.bodyFrame);
     local titleLabel = Instance.new("TextLabel", btn);
     local textFrame = Instance.new("TextBox", btn);
 	
+	if noCallbackOnStart ~= nil and not (noCallbackOnStart == true) then
 	callback(presetText);
+	end;
 
     btn.Name = "btn";
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50);
