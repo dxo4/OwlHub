@@ -135,8 +135,8 @@ function OwlLib:new(title)
             self.backgroundFrame.Visible = false;
             self.bodyFrame.Visible = false;
         elseif not self.backgroundFrame.Visible then
-            spawn(function()
-                for i, v in pairs(bodyFrame:GetChildren()) do
+            for i, v in pairs(bodyFrame:GetChildren()) do
+                spawn(function()
                     if v:IsA("TextButton") and v ~= mainBtn then
                         v.backgroundFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true);
                         v.bodyFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true);
@@ -144,8 +144,8 @@ function OwlLib:new(title)
                         v.backgroundFrame.Visible = false;
                         v.bodyFrame.Visible = false;
                     end;
-                end;
-            end);
+                end);
+            end;
             self.backgroundFrame.Visible = true;
             self.bodyFrame.Visible = true;
             self.backgroundFrame:TweenSize(UDim2.new(1.219, 0, (#self.bodyFrame:GetChildren() - 1) * 1.599, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
