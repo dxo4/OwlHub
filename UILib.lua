@@ -305,7 +305,7 @@ function OwlLib.Content:newTextbox(title, callback, presetText, noCallbackOnStar
     local titleLabel = Instance.new("TextLabel", btn);
     local inputBox = Instance.new("TextBox", btn);
 
-    if noCallbackOnStart == true then
+    if not noCallbackOnStart then
         callback(presetText);
     end;
     
