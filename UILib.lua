@@ -471,7 +471,7 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
     bindBtn.Position = UDim2.new(1, 0, 0, 0);
     bindBtn.Size = UDim2.new(0.3, 0, 1, 0);
     bindBtn.Font = Enum.Font.SourceSansItalic;
-    bindBtn.Text = presetKeyCode and tostring(string.char(presetKeyCode.Value)) or "KEY";
+    bindBtn.Text = nm;
     bindBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
     bindBtn.TextScaled = true;
     bindBtn.TextWrapped = true;
