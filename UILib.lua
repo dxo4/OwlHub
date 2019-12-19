@@ -36,7 +36,7 @@ UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder;
 UIListLayout.Padding = UDim.new(0.05, 0);
 
 game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
-    if not onGui and input.KeyCode == Enum.KeyCode.P then
+    if not onGui and (input.KeyCode == Enum.KeyCode.P or input.KeyCode == Enum.KeyCode.RightShift) then
         OwlLibGui.Enabled = not OwlLibGui.Enabled;
     end;
 end);
