@@ -83,7 +83,7 @@ end);
 function OwlLib:SetCategory() end;
 
 function OwlLib.Content:Resize(scrollingFrame)
-    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (#scrollingFrame:GetChildren() - 1) * 35);
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (#scrollingFrame:GetChildren() - 1) * 36);
 end;
 
 function OwlLib.Content:Ripple(btn)
