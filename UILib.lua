@@ -1,60 +1,89 @@
 local OwlLib = {Content = {}};
 
-local OwlLibGui = Instance.new("ScreenGui", game:GetService("CoreGui"));
-local owlHubLogo = Instance.new("ImageLabel", OwlLibGui);
-local backgroundFrame = Instance.new("Frame", owlHubLogo);
-local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint", owlHubLogo);
-local bodyFrame = Instance.new("Frame", owlHubLogo);
-local UIListLayout = Instance.new("UIListLayout", bodyFrame);
+local owlLibGui = game:GetObjects("rbxassetid://4530443679")[1];
+owlLibGui.Parent = game:GetService("CoreGui");
+local mainFrame = owlLibGui.mainFrame;
 
-OwlLibGui.Name = "OwlLibGui";
+local tweenService = game:GetService("TweenService");
+local inputService = game:GetService("UserInputService");
 
-owlHubLogo.Name = "owlHubLogo";
-owlHubLogo.BackgroundTransparency = 1;
-owlHubLogo.BorderSizePixel = 0;
-owlHubLogo.Size = UDim2.new(0.168, 0, 0.115, 0);
-owlHubLogo.Image = "rbxassetid://4387074835";
-owlHubLogo.ImageRectOffset = Vector2.new(0, 40);
-owlHubLogo.ImageRectSize = Vector2.new(500, 300);
-owlHubLogo.ScaleType = Enum.ScaleType.Fit;
+local firstBodyFrame;
+local draggableToggle;
+local draggableInput;
+local draggableStart;
 
-backgroundFrame.Name = "backgroundFrame";
-backgroundFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30);
-backgroundFrame.BorderSizePixel = 0;
-backgroundFrame.Position = UDim2.new(0.04, 0, 1, 0);
-backgroundFrame.Size = UDim2.new(0.925, 0, 0, 0);
+mainFrame.topBarFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true;
+        draggableStart = input.Position;
+        startPos = mainFrame.AbsolutePosition;
+    end;
+end);
 
-UIAspectRatioConstraint.AspectRatio = 2;
+mainFrame.topBarFrame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false;
+    end;
+end);
 
-bodyFrame.Name = "bodyFrame";
-bodyFrame.BackgroundTransparency = 1;
-bodyFrame.BorderSizePixel = 0;
-bodyFrame.Position = UDim2.new(0.04, 0, 1, 0);
-bodyFrame.Size = UDim2.new(0.925, 0, 0.8, 0);
+inputService.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+        local res = owlLibGui.AbsoluteSize;
+        mainFrame.Position = UDim2.new(0, startPos.X + (input.Position.X - draggableStart.X), 0, startPos.Y + (input.Position.Y - draggableStart.Y));
+    end;
+end);
 
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder;
-UIListLayout.Padding = UDim.new(0.05, 0);
+mainFrame.topBarFrame.exitBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
+    end;
+end);
 
-game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
+mainFrame.topBarFrame.exitBtn.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
+    end;
+end);
+
+mainFrame.topBarFrame.exitBtn.MouseButton1Click:Connect(function()
+    mainFrame:TweenSize(UDim2.new(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    wait(0.25);
+    mainFrame.topBarFrame:TweenSize(UDim2.new(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    mainFrame:TweenSize(UDim2.new(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    wait(0.25);
+    owlLibGui:Destroy();
+end);
+
+mainFrame.topBarFrame.miniBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
+    end;
+end);
+
+mainFrame.topBarFrame.miniBtn.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
+    end;
+end);
+
+mainFrame.topBarFrame.miniBtn.MouseButton1Click:Connect(function()
+    if mainFrame.Size ~= UDim2.new(0, 387, 0, 27) then
+        mainFrame:TweenSize(UDim2.new(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
+    else
+        mainFrame:TweenSize(UDim2.new(0, 387, 0, 225), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
+    end;
+end);
+
+inputService.InputBegan:Connect(function(input, onGui)
     if not onGui and (input.KeyCode == Enum.KeyCode.P or input.KeyCode == Enum.KeyCode.RightShift) then
-        OwlLibGui.Enabled = not OwlLibGui.Enabled;
+        owlLibGui.Enabled = not owlLibGui.Enabled;
     end;
 end);
 
 function OwlLib:SetCategory() end;
 
-function OwlLib.Content:initBtnEffect(btn)
-    btn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play();
-        end;
-    end);
-
-    btn.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(45, 45, 45)}):Play();
-        end;
-    end);
+function OwlLib.Content:Resize(scrollingFrame)
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (#scrollingFrame:GetChildren() - 1) * 35);
 end;
 
 function OwlLib.Content:Ripple(btn)
@@ -79,7 +108,7 @@ function OwlLib.Content:Ripple(btn)
 		rippleEffectInner.ImageColor3 = Color3.fromRGB(45, 45, 45);
 		rippleEffectInner.ImageTransparency = 0.7;
 		rippleEffectInner.ScaleType = Enum.ScaleType.Fit;
-		rippleEffect.Position = UDim2.new((mouse.X - rippleEffect.AbsolutePosition.X) / btn.AbsoluteSize.X, 0, (mouse.Y - rippleEffect.AbsolutePosition.Y) / btn.AbsoluteSize.Y, 0);
+		rippleEffect.Position = UDim2.new(0, mouse.X - rippleEffect.AbsolutePosition.X, 0, mouse.Y - rippleEffect.AbsolutePosition.Y);
 		rippleEffect:TweenSizeAndPosition(UDim2.new(10, 0, 10, 0), UDim2.new(-4.5, 0, -4.5, 0), "Out", "Quad", 0.33);
 		for i = 1, 10 do
 			rippleEffect.ImageTransparency = rippleEffect.ImageTransparency + 0.01;
@@ -89,211 +118,150 @@ function OwlLib.Content:Ripple(btn)
 	end)
 end;
 
+function OwlLib.Content:initBtnEffect(btn)
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.85}):Play();
+        end;
+    end);
+
+    btn.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
+        end;
+    end);
+end;
+
 function OwlLib:new(title)
     local self = setmetatable({}, {__index = self.Content});
 
-    backgroundFrame.Size = UDim2.new(0.925, 0, (#bodyFrame:GetChildren()) * 0.32, 0);
-
-    local mainBtn = Instance.new("TextButton", bodyFrame)
-    self.backgroundFrame = Instance.new("Frame", mainBtn);
-    self.bodyFrame = Instance.new("Frame", mainBtn);
-    local UIListLayout = Instance.new("UIListLayout", self.bodyFrame);
-
-    mainBtn.Name = "mainBtn";
-    mainBtn.BackgroundTransparency = 1;
-    mainBtn.BorderSizePixel = 0;
-    mainBtn.Size = UDim2.new(1, 0, 0.35, 0);
-    mainBtn.Font = Enum.Font.SourceSansBold;
-    mainBtn.Text = title;
-    mainBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
-    mainBtn.TextScaled = true;
-    mainBtn.TextWrapped = true;
-
-    self.backgroundFrame.Name = "backgroundFrame";
-    self.backgroundFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30);
-    self.backgroundFrame.BorderSizePixel = 0;
-    self.backgroundFrame.Position = UDim2.new(1, 0, 0, 0);
-    self.backgroundFrame.Size = UDim2.new(1.219, 0, 0, 0);
-    self.backgroundFrame.Visible = false;
-
-    self.bodyFrame.Name = "bodyFrame";
-    self.bodyFrame.BackgroundTransparency = 1;
-    self.bodyFrame.BorderSizePixel = 0;
-    self.bodyFrame.Position = UDim2.new(1, 0, 0, 0);
-    self.bodyFrame.Size = UDim2.new(1.219, 0, 0, 0);
-    self.bodyFrame.ZIndex = 2;
+    self.bodyFrame = game:GetObjects("rbxassetid://4531111462")[1];
+    self.bodyFrame.Parent = mainFrame;
+    self.bodyFrame.Name = title .. "BodyFrame";
     self.bodyFrame.Visible = false;
 
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder;
-    UIListLayout.Padding = UDim.new(0.025, 0);
+    if not firstBodyFrame then
+        firstBodyFrame = self.bodyFrame;
+        self.bodyFrame.Visible = true;
+    end;
 
-    mainBtn.MouseButton1Click:Connect(function()
-        if self.backgroundFrame.Visible then
-            self.backgroundFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
-            self.bodyFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
-            wait(0.25);
-            self.backgroundFrame.Visible = false;
-            self.bodyFrame.Visible = false;
-        elseif not self.backgroundFrame.Visible then
-            for i, v in pairs(bodyFrame:GetChildren()) do
-                spawn(function()
-                    if v:IsA("TextButton") and v ~= mainBtn then
-                        v.backgroundFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true);
-                        v.bodyFrame:TweenSize(UDim2.new(1.219, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.15, true);
-                        wait(0.15);
-                        v.backgroundFrame.Visible = false;
-                        v.bodyFrame.Visible = false;
-                    end;
-                end);
+    local tabBtn = game:GetObjects("rbxassetid://4530456835")[1];
+    tabBtn.Parent = owlLibGui.mainFrame.tabsFrame;
+    tabBtn.tabLabel.Text = title;
+    tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
+
+    tabBtn.MouseButton1Click:Connect(function()
+        for i, v in pairs(mainFrame:GetChildren()) do
+            if v.Name:find("BodyFrame") then
+                if v ~= self.bodyFrame then
+                    v.Visible = false;
+                end;
             end;
-            self.backgroundFrame.Visible = true;
-            self.bodyFrame.Visible = true;
-            self.backgroundFrame:TweenSize(UDim2.new(1.219, 0, (#self.bodyFrame:GetChildren() - 1) * 1.599, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
-            self.bodyFrame:TweenSize(UDim2.new(1.219, 0, 9.136, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
         end;
+        self.bodyFrame.Visible = true;
     end);
 
     return self;
 end;
 
 function OwlLib.Content:newBtn(title, callback, noToggle)
-    local enabled = false;
-    local btn = Instance.new("TextButton", self.bodyFrame);
-    local titleLabel = Instance.new("TextLabel", btn);
-    local sideFrame = Instance.new("Frame", btn);
-    local statusFrame = Instance.new("Frame", sideFrame);
-
-    btn.Name = "btn";
-    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    btn.BorderSizePixel = 0;
-    btn.ClipsDescendants = true;
-    btn.Size = UDim2.new(1, 0, 0.15, 0);
-    btn.AutoButtonColor = false;
-    btn.Text = "";
-
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
+    self:Resize(self.bodyFrame);
 
     if not noToggle then
-        sideFrame.Name = "sideFrame";
-        sideFrame.AnchorPoint = Vector2.new(1, 0);
-        sideFrame.BackgroundColor3 = Color3.fromRGB(55, 55, 55);
-        sideFrame.BorderSizePixel = 0;
-        sideFrame.Position = UDim2.new(1, 0, 0, 0);
-        sideFrame.Size = UDim2.new(0.3, 0, 1, 0);
+        local enabled = false;
+        
+        local btn = game:GetObjects("rbxassetid://4531129509")[1];
+        btn.Parent = self.bodyFrame;
+        btn.titleLabel.Text = title;
+        btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+        btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
 
-        statusFrame.Name = "statusFrame";
-        statusFrame.AnchorPoint = Vector2.new(0.5, 0.5);
-        statusFrame.BackgroundColor3 = Color3.fromRGB(180, 0, 0);
-        statusFrame.BorderSizePixel = 0;
-        statusFrame.Position = UDim2.new(0.5, 0, 0.5, 0);
-        statusFrame.Size = UDim2.new(0.83, 0, 0.71, 0);
-    end;
+        self:initBtnEffect(btn);
 
-    self:initBtnEffect(btn);
-
-    local toggle = {
-        [true] = Color3.fromRGB(0, 194, 94),
-        [false] = Color3.fromRGB(180, 0, 0)
-    };
-
-    btn.MouseButton1Click:Connect(function()
-        self:Ripple(btn);
-        enabled = not enabled;
-        if not noToggle then
-            game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
-        end;
-        callback(enabled);
-    end);
-
-    if noToggle then
-        return {
-            Fire = function(self) 
-                callback();
-            end;
+        local toggle = {
+            [true] = Color3.fromRGB(0, 194, 94),
+            [false] = Color3.fromRGB(180, 0, 0)
         };
-    else    
+
+        btn.MouseButton1Click:Connect(function()
+            self:Ripple(btn);
+            enabled = not enabled;
+            tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+            callback(enabled);
+        end);
+
         return {
             Set = function(self, bool) 
                 enabled = bool;
                 if not noToggle then
-                    game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+                    tweenService:Create(btn.statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
                     callback(enabled);
                 end;
+            end;
+        };
+    elseif noToggle then
+        local btn = game:GetObjects("rbxassetid://4531209476")[1];
+        btn.Parent = self.bodyFrame;
+        btn.titleLabel.Text = title;
+        btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+        btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 17, 0, 30);
+
+        self:initBtnEffect(btn);
+
+        btn.MouseButton1Click:Connect(function()
+            self:Ripple(btn);
+            callback();
+        end);
+
+        return {
+            Fire = function(self) 
+                callback();
             end;
         };
     end;
 end;
 
 function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
-    local dragging = false;
-    local sliderFrame = Instance.new("Frame", self.bodyFrame);
-    local slidingFrame = Instance.new("Frame", sliderFrame);
-    local titleLabel = Instance.new("TextLabel", sliderFrame);
-    
-    sliderFrame.Name = "sliderFrame";
-    sliderFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    sliderFrame.BorderSizePixel = 0;
-    sliderFrame.Size = UDim2.new(1, 0, 0.15, 0);
-    
-    slidingFrame.Name = "slidingFrame";
-    slidingFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
-    slidingFrame.BorderSizePixel = 0;
-    slidingFrame.Size = UDim2.new((startPoint or 0) / max, 0, 1, 0);
+    self:Resize(self.bodyFrame);
 
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.ZIndex = 2;
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title .. " | " .. tostring(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
+    local dragging = false;
+    
+    local sliderFrame = game:GetObjects("rbxassetid://4531326550")[1];
+    sliderFrame.Parent = self.bodyFrame;
+    sliderFrame.titleLabel.Text = title;
+    sliderFrame.titleLabel.Size = UDim2.new(0, sliderFrame.titleLabel.TextBounds.X, 1, 0);
+    sliderFrame.Size = UDim2.new(0, sliderFrame.titleLabel.Size.X.Offset + 195, 0, 30);
+
+    local sliderIndicatorFrame = sliderFrame.sliderIndicatorFrame;
+    sliderIndicatorFrame.valueLabel.Text = tostring(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
+
+    local slidingFrame = sliderFrame.sliderIndicatorFrame.slidingFrame;
+    slidingFrame.Size = UDim2.new((startPoint or 0) / max, 0, 1, 0);
 
     callback(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
 
     local function slide(input)
-        local pos = UDim2.new(math.clamp((input.Position.X - sliderFrame.AbsolutePosition.X) / sliderFrame.AbsoluteSize.X, 0, 1), 0, 1, 0);
+        local pos = UDim2.new(math.clamp((input.Position.X - sliderIndicatorFrame.AbsolutePosition.X) / sliderIndicatorFrame.AbsoluteSize.X, 0, 1), 0, 1, 0);
         slidingFrame:TweenSize(pos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         local value = math.floor(((pos.X.Scale * max) / max) * (max - min) + min);
-        titleLabel.Text = title .. " | " .. tostring(value);
+        sliderIndicatorFrame.valueLabel.Text = tostring(value);
         callback(value);
     end;
 
-    sliderFrame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    sliderIndicatorFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            slide(input);
 			dragging = true;
 		end;
 	end);
 	
-	sliderFrame.InputEnded:Connect(function(input)
+	sliderIndicatorFrame.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			dragging = false;
 		end;
     end);
-	
-	sliderFrame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			slide(input);
-		end;
-	end);
 
-	game:GetService("UserInputService").InputChanged:Connect(function(input)
+	inputService.InputChanged:Connect(function(input)
 		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 			slide(input);
 		end;
@@ -301,98 +269,47 @@ function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
 end;
 
 function OwlLib.Content:newTextbox(title, callback, presetText, noCallbackOnStart)
-    local btn = Instance.new("TextButton", self.bodyFrame);
-    local titleLabel = Instance.new("TextLabel", btn);
-    local inputBox = Instance.new("TextBox", btn);
+    self:Resize(self.bodyFrame);
+
+    local btn = game:GetObjects("rbxassetid://4531463561")[1];
+    btn.Parent = self.bodyFrame;
+    btn.titleLabel.Text = title;
+    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 100, 0, 30);
+
+    btn.inputBox.Text = presetText and presetText or "";
 
     if not noCallbackOnStart then
         callback(presetText);
     end;
-    
-    btn.Name = "btn";
-    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    btn.BorderSizePixel = 0;
-    btn.ClipsDescendants = true;
-    btn.Size = UDim2.new(1, 0, 0.15, 0);
-    btn.AutoButtonColor = false;
-    btn.Text = "";
-    
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
-    
-    inputBox.Name = "inputBox";
-    inputBox.AnchorPoint = Vector2.new(1, 0);
-    inputBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60);
-    inputBox.BorderSizePixel = 0;
-    inputBox.Position = UDim2.new(1, 0, 0, 0);
-    inputBox.Size = UDim2.new(0.345, 0, 1, 0);
-    inputBox.Font = Enum.Font.SourceSansItalic;
-    inputBox.Text = presetText and presetText or "";
-    inputBox.TextColor3 = Color3.fromRGB(255, 255, 255);
-    inputBox.TextScaled = true;
-    inputBox.TextWrapped = true;
 
-    inputBox.FocusLost:Connect(function()
-        callback(inputBox.Text);
+    btn.inputBox.FocusLost:Connect(function()
+        callback(btn.inputBox.Text);
     end);
 end;
 
 function OwlLib.Content:newBind(title, callback, presetKeyCode)
+    self:Resize(self.bodyFrame);
+
     local enabled = false;
     local listening = false;
     local activated = presetKeyCode and true or false;
     local keyCode = presetKeyCode;
-    local bindFrame = Instance.new("Frame", self.bodyFrame);
-    local bindBtn = Instance.new("TextButton", bindFrame);
-    local titleLabel = Instance.new("TextLabel", bindFrame);
 
-    bindFrame.Name = "bindFrame";
-    bindFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    bindFrame.BorderSizePixel = 0;
-    bindFrame.Size = UDim2.new(1, 0, 0.15, 0);
+    local btn = game:GetObjects("rbxassetid://4531229816")[1];
+    btn.Parent = self.bodyFrame;
+    btn.titleLabel.Text = title;
+    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
 
-    bindBtn.Name = "bindBtn";
-    bindBtn.AnchorPoint = Vector2.new(1, 0);
-    bindBtn.BackgroundColor3 = Color3.fromRGB(55, 55, 55);
-    bindBtn.BorderSizePixel = 0;
-    bindBtn.Position = UDim2.new(1, 0, 0, 0);
-    bindBtn.Size = UDim2.new(0.3, 0, 1, 0);
-    bindBtn.Font = Enum.Font.SourceSansItalic;
-    bindBtn.Text = presetKeyCode and tostring(string.char(presetKeyCode.Value)) or "KEY";
-    bindBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
-    bindBtn.TextScaled = true;
-    bindBtn.TextWrapped = true;
-    bindBtn.AutoButtonColor = false;
+    btn.bindBtn.Text = presetKeyCode and string.upper(tostring(string.char(presetKeyCode.Value))) or "KEY";
 
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
-
-    game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
+    inputService.InputBegan:Connect(function(input, onGui)
         if onGui then return; end;
 
         if listening and not activated then
             pcall(function()
-                bindBtn.Text = tostring(string.char(input.KeyCode.Value));
+                btn.bindBtn.Text = string.upper(tostring(string.char(input.KeyCode.Value)));
                 listening = false;
                 keyCode = input.KeyCode;
                 activated = true;
@@ -404,8 +321,8 @@ function OwlLib.Content:newBind(title, callback, presetKeyCode)
         end;
     end);
 
-    bindBtn.MouseButton1Click:Connect(function()
-        bindBtn.Text = "...";
+    btn.bindBtn.MouseButton1Click:Connect(function()
+        btn.bindBtn.Text = "...";
 
         activated = false;
         listening = true;
@@ -413,6 +330,8 @@ function OwlLib.Content:newBind(title, callback, presetKeyCode)
 end;
 
 function OwlLib.Content:newCBind(title, callback, presetKeyCode)
+    self:Resize(self.bodyFrame);
+
     local enabled = false;
     local activated = presetKeyCode and true or false;
     local banned = {
@@ -427,7 +346,7 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
         if typeof(key) == "Instance" then
             if key.UserInputType == Enum.UserInputType.Keyboard and inp.KeyCode == key.KeyCode then
                 return true;
-            elseif tostring(key.UserInputType):find('MouseButton') and inp.UserInputType == key.UserInputType then
+            elseif tostring(key.UserInputType):find("MouseButton") and inp.UserInputType == key.UserInputType then
                 return true
 			end
         end
@@ -455,289 +374,74 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
     local nm = (presetKeyCode and (shortNames[presetKeyCode.Name] or presetKeyCode.Name) or "None");
     local keyCode = presetKeyCode;
 
-    local bindFrame = Instance.new("Frame", self.bodyFrame);
-    local bindBtn = Instance.new("TextButton", bindFrame);
-    local titleLabel = Instance.new("TextLabel", bindFrame);
+    local btn = game:GetObjects("rbxassetid://4531229816")[1];
+    btn.Parent = self.bodyFrame;
+    btn.titleLabel.Text = title;
+    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
 
-    bindFrame.Name = "bindFrame";
-    bindFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    bindFrame.BorderSizePixel = 0;
-    bindFrame.Size = UDim2.new(1, 0, 0.15, 0);
+    btn.bindBtn.Text = nm;
 
-    bindBtn.Name = "bindBtn";
-    bindBtn.AnchorPoint = Vector2.new(1, 0);
-    bindBtn.BackgroundColor3 = Color3.fromRGB(55, 55, 55);
-    bindBtn.BorderSizePixel = 0;
-    bindBtn.Position = UDim2.new(1, 0, 0, 0);
-    bindBtn.Size = UDim2.new(0.3, 0, 1, 0);
-    bindBtn.Font = Enum.Font.SourceSansItalic;
-    bindBtn.Text = nm;
-    bindBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
-    bindBtn.TextScaled = true;
-    bindBtn.TextWrapped = true;
-    bindBtn.AutoButtonColor = false;
-
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
-
-    game:GetService("UserInputService").InputBegan:Connect(function(input, onGui)
+    inputService.InputBegan:Connect(function(input, onGui)
         if onGui then return; end;
         if activated and isreallypressed(keyCode, input) then
             callback(true);
         end;
     end);
-    game:GetService("UserInputService").InputEnded:Connect(function(input, onGui)
+    inputService.InputEnded:Connect(function(input, onGui)
         if onGui then return; end;
         if activated and not listening and isreallypressed(keyCode, input) then
             callback(false);
         end;
     end);    
-    bindBtn.MouseButton1Click:Connect(function()
-        bindBtn.Text = "...";
+    btn.bindBtn.MouseButton1Click:Connect(function()
+        btn.bindBtn.Text = "...";
         activated = false;
-        local input, onGui = game:GetService('UserInputService').InputBegan:wait();
+        local input, onGui = inputService.InputBegan:Wait();
         keyCode = input;
         local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and (shortNames[input.UserInputType.Name] or input.UserInputType.Name) or input.KeyCode.Name);
-        bindBtn.Text = name
-        activated=true;
-    end);
-end;
-
-function OwlLib.Content:newDropdown(title, callback, list)
-    local btn = Instance.new("TextButton", self.bodyFrame);
-    local titleLabel = Instance.new("TextLabel", btn);
-    local arrowLabel = Instance.new("TextLabel", titleLabel);
-    local backgroundFrame = Instance.new("Frame", btn);
-    local bodyFrame = Instance.new("Frame", btn);
-    local UIListLayout = Instance.new("UIListLayout", bodyFrame);
-
-    callback(list[1]);
-
-    btn.Name = "btn";
-    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    btn.BorderSizePixel = 0;
-    btn.Size = UDim2.new(1, 0, 0.15, 0);
-    btn.AutoButtonColor = false;
-    btn.Text = "";
-
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(1, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-
-    arrowLabel.Name = "arrowLabel";
-    arrowLabel.AnchorPoint = Vector2.new(1, 0.5);
-    arrowLabel.BackgroundTransparency = 1;
-    arrowLabel.BorderSizePixel = 0;
-    arrowLabel.Position = UDim2.new(1, 0, 0.5, 0);
-    arrowLabel.Size = UDim2.new(0.149, 0, 1, 0);
-    arrowLabel.Font = Enum.Font.SourceSansBold;
-    arrowLabel.Text = ">";
-    arrowLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    arrowLabel.TextScaled = true;
-    arrowLabel.TextWrapped = true;
-
-    backgroundFrame.Name = "backgroundFrame";
-    backgroundFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    backgroundFrame.BorderSizePixel = 0;
-    backgroundFrame.Position = UDim2.new(1, 0, 0, 0);
-    backgroundFrame.Size = UDim2.new(1, 0, 0, 0);
-    backgroundFrame.ZIndex = 2
-    backgroundFrame.Visible = false;
-
-    bodyFrame.Name = "bodyFrame";
-    bodyFrame.BackgroundTransparency = 1;
-    bodyFrame.BorderSizePixel = 0;
-    bodyFrame.Position = UDim2.new(1, 0, 0, 0);
-    bodyFrame.Size = UDim2.new(1, 0, 0, 0);
-    bodyFrame.ZIndex = 3;
-    bodyFrame.Visible = false;
-
-    UIListLayout.Parent = bodyFrame;
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder;
-    UIListLayout.Padding = UDim.new(0.025, 0);
-
-    self:initBtnEffect(btn);
-
-    for i, v in pairs(list) do
-        local btn = Instance.new("TextButton", bodyFrame);
-        btn.Name = "btn";
-        btn.BackgroundTransparency = 1;
-        btn.BorderSizePixel = 0;
-        btn.Size = UDim2.new(1, 0, 0.35, 0);
-        btn.Font = Enum.Font.SourceSansItalic;
-        btn.Text = v;
-        btn.TextColor3 = Color3.fromRGB(255, 255, 255);
-        btn.TextScaled = true;
-        btn.TextWrapped = true;
-        btn.ZIndex = 4;
-
-        btn.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseMovement then
-                game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
-            end;
-        end);
-
-        btn.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseMovement then
-                game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
-            end;
-        end);
-
-        btn.MouseButton1Click:Connect(function()
-            callback(v);
-            arrowLabel.Text = ">";
-            backgroundFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            bodyFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            wait(0.15);
-            bodyFrame.Visible = false;
-            backgroundFrame.Visible = false;
-        end);
-    end;
-
-    btn.MouseButton1Click:Connect(function()
-        if not backgroundFrame.Visible then
-            backgroundFrame.Visible = true;
-            bodyFrame.Visible = true;
-            arrowLabel.Text = "<";
-            backgroundFrame:TweenSize(UDim2.new(1, 0, (#bodyFrame:GetChildren() - 1) * 0.909, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            bodyFrame:TweenSize(UDim2.new(1, 0, 2.423, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-        elseif backgroundFrame.Visible then
-            arrowLabel.Text = ">";
-            backgroundFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            bodyFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            wait(0.15);
-            bodyFrame.Visible = false;
-            backgroundFrame.Visible = false;
-        end;
+        btn.bindBtn.Text = name
+        activated = true;
     end);
 end;
 
 function OwlLib.Content:newColorPicker(title, callback, presetColor)
+    self:Resize(self.bodyFrame);
+
+    local oldSize;
     local rainbow = false;
     local hueSatDragging = false;
     local valueDragging = false;
-    local btn = Instance.new("TextButton", self.bodyFrame);
-    local titleLabel = Instance.new("TextLabel", btn);
-    local statusFrame = Instance.new("Frame", btn);
-    local colorPickingFrame = Instance.new("Frame", btn);
-    local hueSatFrame = Instance.new("ImageLabel", colorPickingFrame);
-    local hueSatIndicatorFrame = Instance.new("ImageLabel", hueSatFrame);
-    local valueFrame = Instance.new("ImageLabel", colorPickingFrame);
-    local valueIndicatorFrame = Instance.new("Frame", valueFrame);
-    local rainbowBtn = Instance.new("TextButton", colorPickingFrame);
+
+    local btn = game:GetObjects("rbxassetid://4531551348")[1];
+    btn.Parent = self.bodyFrame;
+    btn.titleLabel.Text = title;
+    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
+
+    local colorFrame = btn.colorFrame;
+    local colorPickingFrame = btn.colorPickingFrame;
+    local rainbowBtn = colorPickingFrame.rainbowBtn;
+    local hueSatFrame = colorPickingFrame.hueSatFrame;
+    local valueFrame = colorPickingFrame.valueFrame;
+    local hueSatIndicatorFrame = hueSatFrame.hueSatIndicatorFrame;
+    local valueIndicatorFrame = valueFrame.valueIndicatorFrame;
 
     callback(presetColor and presetColor or Color3.fromRGB(255, 255, 255));
-    
-    btn.Name = "btn";
-    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    btn.BorderSizePixel = 0;
-    btn.Size = UDim2.new(1, 0, 0.15, 0);
-    btn.AutoButtonColor = false;
-    btn.Text = "";
-    
-    titleLabel.Name = "titleLabel";
-    titleLabel.AnchorPoint = Vector2.new(0, 0.5);
-    titleLabel.BackgroundTransparency = 1;
-    titleLabel.BorderSizePixel = 0;
-    titleLabel.Position = UDim2.new(0.03, 0, 0.5, 0);
-    titleLabel.Size = UDim2.new(0.97, 0, 0.7, 0);
-    titleLabel.Font = Enum.Font.SourceSansLight;
-    titleLabel.Text = title;
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-    titleLabel.TextScaled = true;
-    titleLabel.TextWrapped = true;
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left;
-    
-    statusFrame.Name = "statusFrame";
-    statusFrame.AnchorPoint = Vector2.new(1, 0);
-    statusFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-    statusFrame.BorderSizePixel = 0;
-    statusFrame.Position = UDim2.new(1, 0, 0, 0);
-    statusFrame.Size = UDim2.new(0.3, 0, 1, 0);
-    
-    colorPickingFrame.Name = "colorPickingFrame";
-    colorPickingFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30);
-    colorPickingFrame.BorderSizePixel = 0;
-    colorPickingFrame.Position = UDim2.new(1, 0, 0, 0);
-    colorPickingFrame.Size = UDim2.new(1, 0, 0, 0);
-    colorPickingFrame.Visible = false;
-    
-    hueSatFrame.Name = "hueSatFrame";
-    hueSatFrame.BackgroundTransparency = 1;
-    hueSatFrame.BorderSizePixel = 0;
-    hueSatFrame.ClipsDescendants = true;
-    hueSatFrame.Position = UDim2.new(0.029, 0, 0.036, 0);
-    hueSatFrame.Size = UDim2.new(0.768, 0, 0.725, 0);
-    hueSatFrame.Image = "http://www.roblox.com/asset/?id=4018903152";
-    
-    hueSatIndicatorFrame.Name = "hueSatIndicatorFrame";
-    hueSatIndicatorFrame.AnchorPoint = Vector2.new(0.5, 0.5);
-    hueSatIndicatorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-    hueSatIndicatorFrame.BackgroundTransparency = 1;
-    hueSatIndicatorFrame.BorderSizePixel = 0;
-    hueSatIndicatorFrame.Position = UDim2.new(0, 0, 1, 0);
-    hueSatIndicatorFrame.Size = UDim2.new(0.111, 0, 0.146, 0);
-    hueSatIndicatorFrame.Image = "http://www.roblox.com/asset/?id=4019495410";
-    hueSatIndicatorFrame.ImageColor3 = Color3.fromRGB(0, 0, 0);
-    hueSatIndicatorFrame.ScaleType = Enum.ScaleType.Crop;
-    
-    valueFrame.Name = "valueFrame";
-    valueFrame.AnchorPoint = Vector2.new(1, 0);
-    valueFrame.BackgroundTransparency = 1;
-    valueFrame.BorderSizePixel = 0;
-    valueFrame.Position = UDim2.new(0.973, 0, 0.036, 0);
-    valueFrame.Size = UDim2.new(0.146, 0, 0.725, 0);
-    valueFrame.Image = "http://www.roblox.com/asset/?id=4019265005";
-    valueFrame.ScaleType = Enum.ScaleType.Crop;
-    
-    valueIndicatorFrame.Name = "valueIndicatorFrame";
-    valueIndicatorFrame.AnchorPoint = Vector2.new(0, 0.5);
-    valueIndicatorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-    valueIndicatorFrame.BorderColor3 = Color3.fromRGB(0, 0, 0);
-    valueIndicatorFrame.BorderSizePixel = 2;
-    valueIndicatorFrame.Size = UDim2.new(1, 0, 0.028, 0);
-    
-    rainbowBtn.Name = "rainbowBtn";
-    rainbowBtn.AnchorPoint = Vector2.new(0.5, 0);
-    rainbowBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45);
-    rainbowBtn.BorderSizePixel = 0;
-    rainbowBtn.Position = UDim2.new(0.501, 0, 0.8, 0);
-    rainbowBtn.Size = UDim2.new(0.944, 0, 0.16, 0);
-    rainbowBtn.AutoButtonColor = false;
-    rainbowBtn.Font = Enum.Font.SourceSansLight;
-    rainbowBtn.Text = "RAINBOW";
-    rainbowBtn.TextColor3 = Color3.fromRGB(255, 255, 255);
-    rainbowBtn.TextScaled = true;
-    rainbowBtn.TextWrapped = true;
 
     self:initBtnEffect(btn);
 
     btn.MouseButton1Click:Connect(function()
         if not colorPickingFrame.Visible then
+            oldSize = self.bodyFrame.CanvasSize;
+            self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
             colorPickingFrame.Visible = true;
-            colorPickingFrame:TweenSize(UDim2.new(1, 0, 4.303, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            colorPickingFrame:TweenSize(UDim2.new(0, 170, 0, 120), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif colorPickingFrame.Visible then
-            colorPickingFrame:TweenSize(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            colorPickingFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             colorPickingFrame.Visible = false;
+            self.bodyFrame.CanvasSize = oldSize;
         end;
     end);
 
@@ -774,16 +478,16 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
             rainbow = false;
             hueSatIndicatorFrame.Position = UDim2.new(math.clamp((input.Position.X - hueSatFrame.AbsolutePosition.X) / hueSatFrame.AbsoluteSize.X, 0, 1), 0, math.clamp((input.Position.Y - hueSatFrame.AbsolutePosition.Y) / hueSatFrame.AbsoluteSize.Y, 0, 1), 0);
             valueIndicatorFrame.BackgroundColor3 = Color3.fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
-            statusFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
+            colorFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
             valueFrame.ImageColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
-            callback(statusFrame.BackgroundColor3);
+            callback(colorFrame.BackgroundColor3);
         elseif valueDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             rainbow = false;
             valueIndicatorFrame.Position = UDim2.new(0, 0, math.clamp((input.Position.Y - valueFrame.AbsolutePosition.Y) / valueFrame.AbsoluteSize.Y, 0, 1), 0);
             valueIndicatorFrame.BackgroundColor3 = Color3.fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
-            statusFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
+            colorFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
             valueFrame.ImageColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
-            callback(statusFrame.BackgroundColor3);
+            callback(colorFrame.BackgroundColor3);
         end;
     end);
 
@@ -792,12 +496,74 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
             for i = 1, 230 do
                 rainbowBtn.TextColor3 = Color3.fromHSV(i / 230, 1, 1);
                 if rainbow then
-                    statusFrame.BackgroundColor3 = Color3.fromHSV(i / 230, 1, 1);
+                    colorFrame.BackgroundColor3 = Color3.fromHSV(i / 230, 1, 1);
                     callback(Color3.fromHSV(i / 230, 1, 1));
                 end;
                 wait();
             end;
             wait();
+        end;
+    end);
+end;
+
+function OwlLib.Content:newDropdown(title, callback, list)
+    self:Resize(self.bodyFrame);
+
+    local oldSize;
+    local btn = game:GetObjects("rbxassetid://4531687341")[1];
+    btn.Parent = self.bodyFrame;
+    btn.titleLabel.Text = title;
+    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 80, 0, 30);
+
+    callback(list[1]);
+
+    local arrowLabel = btn.arrowLabel;
+    local bodyFrame = btn.bodyFrame;
+
+    self:initBtnEffect(btn);
+
+    for i, v in pairs(list) do
+        local btn = game:GetObjects("rbxassetid://4531683854")[1];
+        btn.Parent = bodyFrame;
+        btn.Text = v;
+        btn.ZIndex = 2;
+
+        btn.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
+            end;
+        end);
+
+        btn.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
+            end;
+        end);
+
+        btn.MouseButton1Click:Connect(function()
+            callback(v);
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
+            bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            wait(0.15);
+            bodyFrame.Visible = false;
+            self.bodyFrame.CanvasSize = oldSize;
+        end);
+    end;
+
+    btn.MouseButton1Click:Connect(function()
+        if not bodyFrame.Visible then
+            oldSize = self.bodyFrame.CanvasSize;
+            self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
+            bodyFrame.Visible = true;
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+            bodyFrame:TweenSize(UDim2.new(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+        elseif bodyFrame.Visible then
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
+            bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            wait(0.15);
+            bodyFrame.Visible = false;
+            self.bodyFrame.CanvasSize = oldSize;
         end;
     end);
 end;
