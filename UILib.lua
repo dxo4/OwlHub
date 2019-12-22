@@ -543,7 +543,7 @@ function OwlLib.Content:newDropdown(title, callback, list)
 
         btn.MouseButton1Click:Connect(function()
             callback(v);
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             bodyFrame.Visible = false;
@@ -556,10 +556,10 @@ function OwlLib.Content:newDropdown(title, callback, list)
             oldSize = self.bodyFrame.CanvasSize;
             self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
             bodyFrame.Visible = true;
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif bodyFrame.Visible then
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             bodyFrame.Visible = false;
