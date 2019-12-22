@@ -146,7 +146,7 @@ function OwlLib:new(title)
     end;
 
     local tabBtn = game:GetObjects("rbxassetid://4530456835")[1];
-    tabBtn.Parent = owlLibGui.mainFrame.tabsFrame;
+    tabBtn.Parent = mainFrame.tabsFrame;
     tabBtn.tabLabel.Text = title;
     tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
 
@@ -168,6 +168,11 @@ function OwlLib:new(title)
                 if v ~= self.bodyFrame then
                     v.Visible = false;
                 end;
+            end;
+        end;
+        for i, v in pairs(mainFrame.tabsFrame:GetChildren()) do
+            if v:IsA("ImageButton") then
+                v.ImageColor3 = Color3.fromRGB(30, 30, 30);
             end;
         end;
         tabBtn.ImageColor3 = Color3.fromRGB(50, 50, 50);
