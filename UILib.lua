@@ -172,10 +172,10 @@ function OwlLib:new(title)
         end;
         for i, v in pairs(mainFrame.tabsFrame:GetChildren()) do
             if v:IsA("ImageButton") then
-                v.ImageColor3 = Color3.fromRGB(30, 30, 30);
+                v.ImageColor3 = Color3.fromRGB(50, 50, 50);
             end;
         end;
-        tabBtn.ImageColor3 = Color3.fromRGB(50, 50, 50);
+        tabBtn.ImageColor3 = Color3.fromRGB(30, 30, 30);
         self.bodyFrame.Visible = true;
     end);
 
