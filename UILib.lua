@@ -150,7 +150,7 @@ function OwlLib:new(title)
     tabBtn.tabLabel.Text = title;
     tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
 
-    tabBtn.InputBegan:Connect(function(input)
+    --[[tabBtn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= Color3.fromRGB(50, 50, 50) then
             tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(40, 40, 40)}):Play();
         end;
@@ -160,7 +160,7 @@ function OwlLib:new(title)
         if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= Color3.fromRGB(50, 50, 50) then
             tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(30, 30, 30)}):Play();
         end;
-    end);
+    end);]]
 
     tabBtn.MouseButton1Click:Connect(function()
         for i, v in pairs(mainFrame:GetChildren()) do
