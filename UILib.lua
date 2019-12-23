@@ -139,16 +139,17 @@ function OwlLib:new(title)
     self.bodyFrame.Parent = mainFrame;
     self.bodyFrame.Name = title .. "BodyFrame";
     self.bodyFrame.Visible = false;
+	
+	local tabBtn = game:GetObjects("rbxassetid://4530456835")[1];
+    tabBtn.Parent = mainFrame.tabsFrame;
+    tabBtn.tabLabel.Text = title;
+    tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
 
     if not firstBodyFrame then
         firstBodyFrame = self.bodyFrame;
         self.bodyFrame.Visible = true;
+		tabBtn.ImageColor3 = Color3.fromRGB(30, 30, 30);
     end;
-
-    local tabBtn = game:GetObjects("rbxassetid://4530456835")[1];
-    tabBtn.Parent = mainFrame.tabsFrame;
-    tabBtn.tabLabel.Text = title;
-    tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
 
     --[[tabBtn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= Color3.fromRGB(50, 50, 50) then
