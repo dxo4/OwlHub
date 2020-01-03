@@ -525,7 +525,7 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     end);
 end;
 
-function OwlLib.Content:newDropdown(title, callback, list)
+function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
     self:Resize(self.bodyFrame);
 
     local oldSize;
@@ -535,7 +535,9 @@ function OwlLib.Content:newDropdown(title, callback, list)
     btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
     btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 80, 0, 30);
 
-    callback(list[1]);
+    if not noCallbackOnStart then
+        callback(list[1]);
+    end;
 
     local arrowLabel = btn.arrowLabel;
     local bodyFrame = btn.bodyFrame;
