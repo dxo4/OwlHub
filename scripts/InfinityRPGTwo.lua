@@ -23,17 +23,17 @@ function main:GetClosestMob()
     return closestPlayer;
 end;
 
-function main:GetSword()
+function main:GetMelee()
     local sword;
 
-    if not self.chosenSword then
+    if self.chosenSword then
+        sword = self.chosenSword;
+    else
         for i, v in pairs(self.localPlayer.Backpack:GetChildren()) do
             if v:FindFirstChild("Handle") and v:FindFirstChild("ItemScriptClient") then
                 sword = v;
             end;
         end;
-    else
-        sword = self.chosenSword;
     end;
 
     return sword;
@@ -41,7 +41,10 @@ end;
 
 function main:EquipMelee()
     pcall(function()
-        self.localPlayer.Character.Humanoid:EquipTool(self:GetSword());
+        local melee = self:GetMelee();
+        if not self.localPlayer.Character:FindFirstChild(melee) then
+            self.localPlayer.Character.Humanoid:EquipTool(melee);
+        end;
     end);
 end;
 
@@ -82,7 +85,7 @@ function main:Initiate()
 
     do --// Kill Aura Setup
         game:GetService("RunService").RenderStepped:Connect(function()
-            if self.killAura and self.localPlayer.Character then
+            if self.killAura and self.localPlayer.Character and self.localPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 self.damageRemote:InvokeServer(self:GetClosestMob());
             end;
         end);
@@ -93,7 +96,7 @@ function main:Initiate()
             if self.autoFarm then
                 pcall(function()
                     self:EquipMelee();
-                    self.localPlayer.Character.HumanoidRootPart.CFrame = self.mobs[self.chosenMob].Head.CFrame * CFrame.new(0, -8, 0);
+                    self.localPlayer.Character.HumanoidRootPart.CFrame = self.mobs[self.chosenMob].Head.CFrame * CFrame.new(0, 0, 8.3);
                     game:GetService("ReplicatedStorage").GameRemotes.DamageMelee:InvokeServer(self.mobs[self.chosenMob]);
                 end);
             end;
