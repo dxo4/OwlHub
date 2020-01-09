@@ -49,5 +49,6 @@
     "3527629287": {"Name": "BIG Paintball", "Script": "BigPaintball.lua"},
     "3759927663": {"Name": "Zombie Strike", "Script": "ZombieStrike.lua"},
     "3803533582": {"Name": "Zombie Strike", "Script": "ZombieStrike.lua"},
-    "3759927663": {"Name": "Zombie Strike", "Script": "ZombieStrike.lua"}
+    "3759927663": {"Name": "Zombie Strike", "Script": "ZombieStrike.lua"},
+    "380305410": {"Name": "Infinity RPG 2", "Script": "InfinityRPGTwo.lua"}
 }
