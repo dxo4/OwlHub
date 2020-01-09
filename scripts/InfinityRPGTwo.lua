@@ -93,7 +93,7 @@ function main:Initiate()
             if self.autoFarm then
                 pcall(function()
                     self:EquipMelee();
-                    self.localPlayer.Character.HumanoidRootPart.CFrame = self.mobs[self.chosenMob].Head.CFrame * CFrame.new(0, -9, 0);
+                    self.localPlayer.Character.HumanoidRootPart.CFrame = self.mobs[self.chosenMob].Head.CFrame * CFrame.new(0, -8, 0);
                     game:GetService("ReplicatedStorage").GameRemotes.DamageMelee:InvokeServer(self.mobs[self.chosenMob]);
                 end);
             end;
