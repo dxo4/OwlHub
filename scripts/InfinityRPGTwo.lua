@@ -42,7 +42,7 @@ end;
 function main:EquipMelee()
     pcall(function()
         local melee = self:GetMelee();
-        if not self.localPlayer.Character:FindFirstChild(melee) then
+        if not self.localPlayer.Character:FindFirstChildOfClass("Tool") then
             self.localPlayer.Character.Humanoid:EquipTool(melee);
         end;
     end);
