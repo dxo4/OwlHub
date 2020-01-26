@@ -2,8 +2,11 @@ local K=string.byte;local C=string.char;local d=string.sub;local S=table.concat;
 
 local sex
 sex = hookfunction(getrawmetatable(game).__index,newcclosure(function(a,b)
-	if not checkcaller() and b=='Disabled' and tostring(getcallingscript())~="WSS" then
-		return false;
+	if not checkcaller() and b=='Disabled' then
+		if tostring(getcallingscript())~="WSS" then
+			return false;
+		else
+		return true
 	end
 	return sex(a,b)
 end))
