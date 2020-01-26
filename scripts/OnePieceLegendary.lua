@@ -4,7 +4,7 @@ sex = hookfunction(getrawmetatable(game).__index, function(a,b)
 		if tostring(getcallingscript())~="WSS" then
 			return false;
 		end
-		return wait(9e9);
+		return true;
 	end
 	return sex(a,b)
 end)
