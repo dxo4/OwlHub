@@ -2,7 +2,7 @@ local sex
 sex = hookfunction(getrawmetatable(game).__index,newcclosure(function(a,b)
 	if not checkcaller() and b=='Disabled' then
 		if tostring(getcallingscript())~="WSS" then
-			return true;
+			return wait(9e9);
 		end
 		return false
 	end
