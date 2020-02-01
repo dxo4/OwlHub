@@ -48,9 +48,7 @@
             Http.open("GET", url);
             Http.send();
 
-            Http.onreadystatechange = (e) => {
-                console.log(Http.responseText);
-            }
+            gamesBox.textContent = Http.responseText;
         </script>
     </body>
 </html>
