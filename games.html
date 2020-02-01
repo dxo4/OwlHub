@@ -43,10 +43,10 @@
         <script type="text/javascript">
             const gamesBox = document.getElementById("gamesBox");
             
-            const Http = new XMLHttpRequest();
-            const url = "https://crishoux.github.io/OwlHub/Games.txt";
-            Http.open("GET", url);
-            Http.send();
+            const games = new XMLHttpRequest();
+            const gamesURL = "https://crishoux.github.io/OwlHub/Games.txt";
+            games.open("GET", gamesURL);
+            games.send();
 
             gamesBox.textContent = Http.responseText;
         </script>
