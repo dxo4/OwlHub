@@ -24,31 +24,32 @@
                 font-family: "Trebuchet MS";
 			}
 
-            #gamesBox {
-                background-color: rgb(45, 45, 45); 
+            #gamesLabel {
+                background-color: rgb(25, 25, 25); 
                 color: rgb(255, 255, 255);
                 border: 0px;
-                width: 500px; 
-                height: 50px;
+                text-align: center;
             }
         </style>
     </head>
     <body>
         <center>
-            <input type="text" readonly id="gamesBox">
+            <h4 id="gamesLabel"></h20>
             <br>
             <br>
         </center>
 
         <script type="text/javascript">
-            const gamesBox = document.getElementById("gamesBox");
-            
+            const gamesBox = document.getElementById("gamesLabel");
+
             const games = new XMLHttpRequest();
             const gamesURL = "https://crishoux.github.io/OwlHub/Games.txt";
-            games.open("GET", gamesURL);
+            games.open("GET", gamesURL, true);
             games.send();
 
-            gamesBox.innerText = Http.responseText;
+            games.onreadystatechange = () => {
+                gamesBox.innerText = games.responseText;
+            }
         </script>
     </body>
 </html>
