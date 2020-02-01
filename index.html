@@ -25,7 +25,7 @@
                 background-image: url(Background.png);
 				background-attachment: fixed;
 				background-size: cover;
-				background-repeat: "no-repeat;";
+				background-repeat: no-repeat;
 			}
 
             #owlImage {
@@ -35,7 +35,7 @@
 
             #scriptBtn {
                 color: rgb(255, 255, 255);
-                background-color: rgb(50, 50, 50);
+                background-color: rgb(45, 45, 45);
                 margin-top: 45px;
                 border: 0px;
                 border-radius: 5px;
@@ -54,6 +54,17 @@
                 display: none;
                 width: 150px;
                 height: 35px;
+            }
+
+            #gamesBtn {
+                background-color: rgb(45, 45, 45); 
+                color: rgb(255, 255, 255); 
+                font-size: large; 
+                border: 0px; 
+                border-radius: 2px;
+                cursor: pointer; 
+                width: 100px; 
+                height: 50px;
             }
 
             #discordBtn {
@@ -96,13 +107,21 @@
             <i style="color: rgb(180, 180, 180);"><a href="https://x.synapse.to/" target = "_blank" style="color: rgb(180, 180, 180);">Synapse X</a><br><br><a href="https://elymltd.selly.store/product/a6576d71/" target = "_blank" style="color: rgb(180, 180, 180);">Sentinel</a><br><br><a href="https://www.asshurthosting.pw/" target = "_blank" style="color: rgb(180, 180, 180);">Sirhurt</a><br><br>Krnl</i>
             <div id="detailLine"></div>
             <br>
+            <h1 style="font-family: monospace;">Games</h1>
+            <button id="gamesBtn">VIEW</button>
+            <div id="detailLine"></div>
+            <br>
             <h1 style="font-family: monospace; color: rgb(114, 137, 218);">Discord</h1>
             <button id="discordBtn">JOIN</button>
+            <br>
+            <br>
+            <br>
         </center>
 
         <script type="text/javascript">
             const scriptBtn = document.getElementById("scriptBtn");
             const copyPopup = document.getElementById("copyPopup");
+            const gamesBtn = document.getElementById("gamesBtn");
             const discordBtn = document.getElementById("discordBtn");
 
             scriptBtn.addEventListener("click", () => {
@@ -114,6 +133,10 @@
                 document.body.removeChild(scriptBox);
                 copyPopup.style.display = "block";
                 setTimeout(() => {copyPopup.style.display = "none";}, 1000);
+            });
+
+            gamesBtn.addEventListener("click", () => {
+                window.open("https://crishoux.github.io/OwlHub/games");
             });
 
             discordBtn.addEventListener("click", () => {
