@@ -42,6 +42,14 @@
         <script type="text/javascript">
             const gamesBox = document.getElementById("gamesBox");
             
+            const Http = new XMLHttpRequest();
+            const url = "https://crishoux.github.io/OwlHub/Games.txt";
+            Http.open("GET", url);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+                console.log(Http.responseText);
+            }
         </script>
     </body>
 </html>
