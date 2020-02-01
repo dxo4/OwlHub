@@ -35,8 +35,8 @@
                 border: 0px;
                 border-radius: 5px;
                 cursor: pointer;
-                height: 35px;
                 width: 650px;
+                height: 35px;
             }
 
             #copyPopup {
@@ -45,15 +45,28 @@
                 border: 0px;
                 border-radius: 4px;
                 text-align: center;
-                height: 35px;
+                position: absolute;
+                display: none;
                 width: 150px;
+                height: 35px;
+            }
+
+            #discordBtn {
+                background-color: rgb(114, 137, 218); 
+                color: rgb(255, 255, 255); 
+                font-size: large; 
+                border: 0px; 
+                border-radius: 2px;
+                cursor: pointer; 
+                width: 100px; 
+                height: 50px;
             }
 
             #detailLine {
                 margin-top: 45px;
                 border: 1px solid rgb(255, 255, 255);
-                height: 0px;
                 width: 500px;
+                height: 0px;
             }
 
             #copyBtn:hover {
@@ -62,26 +75,30 @@
         </style>
     </head>
     <body>
-        <input type="text" value="Copied to clipboard!" readonly style="position: absolute; display: none;" id="copyPopup">
+        <input type="text" value="Copied to clipboard!" readonly id="copyPopup">
         <center>
-            <img src="https://cdn.discordapp.com/icons/621532535389814794/8af648668263775f8a72783cc0653bd0.png?size=2048" id="owlImage">
+            <img src="https://cdn.discordapp.com/icons/621532535389814794/8af648668263775f8a72783cc0653bd0.png?size=2048" alt="Owl Logo" id="owlImage">
             <br>
-            <button readonly id="scriptBtn">loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))();</button>
+            <button id="scriptBtn">loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))();</button>
             <br>
-            <div id="detailLine">
+            <div id="detailLine"></div>
             <br>
             <h1 style="font-family: monospace;">What is Owl Hub?</h1>
-            <i style="width: 450px; color: rgb(180, 180, 180);">Owl Hub is a Roblox script hub developed by <span style="color: rgb(255, 255, 255)">Google Chrome</span> and <span style="color: rgb(255, 255, 255)">CriShoux</span>. It currently has 30+ games. It is made to be executed on Roblox exploits. It works on the exploits that are shown below.</i>
-            <div id="detailLine">
+            <i style="color: rgb(180, 180, 180);">Owl Hub is a <span style="color: rgb(0, 192, 80);">free</span> Roblox script hub developed by <span style="color: rgb(255, 255, 255);">Google Chrome</span> and <span style="color: rgb(255, 255, 255);">CriShoux</span>.<br>It currently has 30+ games. It is made to be executed on Roblox exploits. It works on the exploits that are shown below.</i>
+            <div id="detailLine"></div>
             <br>
             <h1 style="font-family: monospace;">Exploits</h1>
-            <i style="width: 450px; color: rgb(180, 180, 180);"><a href="https://x.synapse.to/" target = "_blank" style="color: rgb(180, 180, 180);">Synapse X</a><br><br>Sentinel<br><br><a href="https://www.asshurthosting.pw/" target = "_blank" style="color: rgb(180, 180, 180);">Sirhurt</a><br><br>Krnl</i>
-            <div id="detailLine">
+            <i style="color: rgb(180, 180, 180);"><a href="https://x.synapse.to/" target = "_blank" style="color: rgb(180, 180, 180);">Synapse X</a><br><br><a href="https://elymltd.selly.store/product/a6576d71/" target = "_blank" style="color: rgb(180, 180, 180);">Sentinel</a><br><br><a href="https://www.asshurthosting.pw/" target = "_blank" style="color: rgb(180, 180, 180);">Sirhurt</a><br><br>Krnl</i>
+            <div id="detailLine"></div>
+            <br>
+            <h1 style="font-family: monospace; color: rgb(114, 137, 218);">Discord</h1>
+            <button id="discordBtn">JOIN</button>
         </center>
 
         <script type="text/javascript">
             const scriptBtn = document.getElementById("scriptBtn");
             const copyPopup = document.getElementById("copyPopup");
+            const discordBtn = document.getElementById("discordBtn");
 
             scriptBtn.addEventListener("click", () => {
                 const scriptBox = document.createElement("textarea");
@@ -92,6 +109,10 @@
                 document.body.removeChild(scriptBox);
                 copyPopup.style.display = "block";
                 setTimeout(() => {copyPopup.style.display = "none";}, 1000);
+            });
+
+            discordBtn.addEventListener("click", () => {
+                window.open("https://discord.gg/FJmaX4X");
             });
         </script>
     </body>
