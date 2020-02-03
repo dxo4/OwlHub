@@ -543,34 +543,40 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
     local bodyFrame = btn.bodyFrame;
 
     self:initBtnEffect(btn);
+    function refresh(list)
+        for i, v in pairs(bodyFrame:GetChildren()) do
+            if not v:IsA("UIListLayout") then v:Destroy(); end;
+        end
+        for i, v in pairs(list) do
+            local btn = game:GetObjects("rbxassetid://4531683854")[1];
+            btn.Parent = bodyFrame;
+            btn.Text = v;
+            btn.ZIndex = 2;
 
-    for i, v in pairs(list) do
-        local btn = game:GetObjects("rbxassetid://4531683854")[1];
-        btn.Parent = bodyFrame;
-        btn.Text = v;
-        btn.ZIndex = 2;
+            btn.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement then
+                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
+                end;
+            end);
 
-        btn.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseMovement then
-                tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
-            end;
-        end);
+            btn.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement then
+                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
+                end;
+            end);
 
-        btn.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseMovement then
-                tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
-            end;
-        end);
+            btn.MouseButton1Click:Connect(function()
+                callback(v);
+                tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+                bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+                wait(0.15);
+                bodyFrame.Visible = false;
+                self.bodyFrame.CanvasSize = oldSize;
+            end);
+        end;
+    end
 
-        btn.MouseButton1Click:Connect(function()
-            callback(v);
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
-            bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
-            wait(0.15);
-            bodyFrame.Visible = false;
-            self.bodyFrame.CanvasSize = oldSize;
-        end);
-    end;
+    refresh(list)
 
     btn.MouseButton1Click:Connect(function()
         if not bodyFrame.Visible then
@@ -587,6 +593,13 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
             self.bodyFrame.CanvasSize = oldSize;
         end;
     end);
+
+    return {
+        Refresh = function(self, list)
+            refresh(list)
+        end
+    }
+
 end;
 
 return OwlLib;
