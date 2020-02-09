@@ -1,4 +1,13 @@
 local OwlLib = {Content = {}};
+local config = {};
+
+pcall(function()
+    config = game:GetService("HttpService"):JSONDecode(readfile(tostring(game.PlaceId) .. ".txt"));
+end);
+
+local function saveConfig()
+    writefile(tostring(game.PlaceId) .. ".txt", game:GetService("HttpService"):JSONEncode(config));
+end;
 
 local owlLibGui = game:GetObjects("rbxassetid://4530443679")[1];
 owlLibGui.Parent = game:GetService("CoreGui");
@@ -6,6 +15,7 @@ local mainFrame = owlLibGui.mainFrame;
 
 local tweenService = game:GetService("TweenService");
 local inputService = game:GetService("UserInputService");
+local httpService = game:GetService("HttpService");
 
 local firstBodyFrame;
 local draggableToggle;
@@ -187,7 +197,10 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
     self:Resize(self.bodyFrame);
 
     if not noToggle then
-        local enabled = false;
+        local enabled = config[title] and true or false;
+        if enabled then
+            callback(enabled);
+        end;
         
         local btn = game:GetObjects("rbxassetid://4531129509")[1];
         btn.Parent = self.bodyFrame;
@@ -202,9 +215,13 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
             [false] = Color3.fromRGB(180, 0, 0)
         };
 
+        tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+
         btn.MouseButton1Click:Connect(function()
             self:Ripple(btn);
             enabled = not enabled;
+            config[title] = enabled;
+            saveConfig();
             tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
             callback(enabled);
         end);
@@ -213,7 +230,9 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
             Set = function(self, bool) 
                 enabled = bool;
                 if not noToggle then
-                    tweenService:Create(btn.statusFrame, TweenInfo.new(0.33, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+                    config[title] = enabled;
+                    saveConfig();
+                    tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
                     callback(enabled);
                 end;
             end;
@@ -251,6 +270,8 @@ function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
     sliderFrame.titleLabel.Size = UDim2.new(0, sliderFrame.titleLabel.TextBounds.X, 1, 0);
     sliderFrame.Size = UDim2.new(0, sliderFrame.titleLabel.Size.X.Offset + 195, 0, 30);
 
+    local startPoint = config[title] and tonumber(config[title]) or startPoint;
+
     local sliderIndicatorFrame = sliderFrame.sliderIndicatorFrame;
     sliderIndicatorFrame.valueLabel.Text = tostring(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
 
@@ -276,7 +297,9 @@ function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
 	
 	sliderIndicatorFrame.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = false;
+            dragging = false;
+            config[title] = sliderIndicatorFrame.valueLabel.Text;
+            saveConfig();
 		end;
     end);
 
@@ -296,13 +319,17 @@ function OwlLib.Content:newTextbox(title, callback, presetText, noCallbackOnStar
     btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
     btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 100, 0, 30);
 
-    btn.inputBox.Text = presetText and presetText or "";
+    local presetText = (config[title] and config[title]) or (presetText and presetText or "");
+
+    btn.inputBox.Text = presetText;
 
     if not noCallbackOnStart then
         callback(presetText);
     end;
 
     btn.inputBox.FocusLost:Connect(function()
+        config[title] = btn.inputBox.Text;
+        saveConfig();
         callback(btn.inputBox.Text);
     end);
 end;
@@ -312,6 +339,7 @@ function OwlLib.Content:newBind(title, callback, presetKeyCode)
 
     local enabled = false;
     local listening = false;
+    local presetKeyCode = config[title] and Enum.KeyCode[config[title]] or presetKeyCode;
     local activated = presetKeyCode and true or false;
     local keyCode = presetKeyCode;
 
@@ -330,6 +358,8 @@ function OwlLib.Content:newBind(title, callback, presetKeyCode)
             pcall(function()
                 btn.bindBtn.Text = string.upper(tostring(string.char(input.KeyCode.Value)));
                 listening = false;
+                config[title] = input.KeyCode.Name;
+                saveConfig();
                 keyCode = input.KeyCode;
                 activated = true;
             end);
@@ -352,6 +382,15 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
     self:Resize(self.bodyFrame);
 
     local enabled = false;
+    local presetKeyCode = presetKeyCode and presetKeyCode;
+    if config[title] then
+        local keyboard = config[title]:find("Keyboard");
+        if keyboard then
+            presetKeyCode = Enum.KeyCode[config[title]:gsub("Keyboard", "")];
+        else
+            presetKeyCode = Enum.UserInputType[config[title]];
+        end;
+    end;
     local activated = presetKeyCode and true or false;
     local banned = {
         Return = true;
@@ -417,6 +456,8 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
         btn.bindBtn.Text = "...";
         activated = false;
         local input, onGui = inputService.InputBegan:Wait();
+        config[title] = (input.UserInputType ~= Enum.UserInputType.Keyboard and input.UserInputType.Name or input.KeyCode.Name .. "Keyboard");
+        saveConfig();
         keyCode = input;
         local name = (input.UserInputType ~= Enum.UserInputType.Keyboard and (shortNames[input.UserInputType.Name] or input.UserInputType.Name) or input.KeyCode.Name);
         btn.bindBtn.Text = name
@@ -446,7 +487,18 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = hueSatFrame.hueSatIndicatorFrame;
     local valueIndicatorFrame = valueFrame.valueIndicatorFrame;
 
-    callback(presetColor and presetColor or Color3.fromRGB(255, 255, 255));
+    local presetColor = presetColor and presetColor or Color3.fromRGB(255, 255, 255);
+    if config[title] then
+        if config[title]["R"] then
+            presetColor = Color3.fromRGB(config[title]["R"], config[title]["G"], config[title]["B"]);
+        elseif config[title] == "Rainbow" then
+            rainbow = true;
+        end;
+    end;
+
+    callback(presetColor);
+
+    colorFrame.BackgroundColor3 = presetColor;
 
     self:initBtnEffect(btn);
 
@@ -465,6 +517,8 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     end);
 
     rainbowBtn.MouseButton1Click:Connect(function()
+        config[title] = "Rainbow";
+        saveConfig();
         rainbow = true;
     end);
     
@@ -477,6 +531,8 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     hueSatFrame.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             hueSatDragging = false;
+            config[title] = {R = colorFrame.BackgroundColor3.R * 255, G = colorFrame.BackgroundColor3.G * 255, B = colorFrame.BackgroundColor3.B * 255};
+            saveConfig();
         end;
     end);
 
@@ -489,6 +545,8 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     valueFrame.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             valueDragging = false;
+            config[title] = {R = colorFrame.BackgroundColor3.R * 255, G = colorFrame.BackgroundColor3.G * 255, B = colorFrame.BackgroundColor3.B * 255};
+            saveConfig();
         end;
     end);
     
@@ -536,14 +594,15 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
     btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 80, 0, 30);
 
     if not noCallbackOnStart then
-        callback(list[1]);
+        callback(config[title] and config[title] or list[1]);
     end;
 
     local arrowLabel = btn.arrowLabel;
     local bodyFrame = btn.bodyFrame;
 
     self:initBtnEffect(btn);
-    function refresh(list)
+    
+    local function refresh(list)
         for i, v in pairs(bodyFrame:GetChildren()) do
             if not v:IsA("UIListLayout") then v:Destroy(); end;
         end
@@ -566,6 +625,8 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
             end);
 
             btn.MouseButton1Click:Connect(function()
+                config[title] = v;
+                saveConfig();
                 callback(v);
                 tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
                 bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
@@ -576,7 +637,7 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
         end;
     end
 
-    refresh(list)
+    refresh(list);
 
     btn.MouseButton1Click:Connect(function()
         if not bodyFrame.Visible then
@@ -596,10 +657,9 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
 
     return {
         Refresh = function(self, list)
-            refresh(list)
+            refresh(list);
         end
     }
-
 end;
 
 return OwlLib;
