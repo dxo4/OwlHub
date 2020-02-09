@@ -15,7 +15,6 @@ local mainFrame = owlLibGui.mainFrame;
 
 local tweenService = game:GetService("TweenService");
 local inputService = game:GetService("UserInputService");
-local httpService = game:GetService("HttpService");
 
 local firstBodyFrame;
 local draggableToggle;
