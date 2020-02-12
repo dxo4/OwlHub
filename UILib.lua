@@ -25,6 +25,10 @@ local draggableInput;
 local draggableStart;
 
 local mouse = game:GetService("Players").LocalPlayer:GetMouse();
+local clamp = math.clamp;
+local fromHSV = Color3.fromHSV;
+local fromRGB = Color3.fromRGB;
+local newUDim2 = UDim2.new;
 
 mainFrame.topBarFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -42,7 +46,7 @@ end);
 
 inputService.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-        mainFrame.Position = UDim2.new(0, startPos.X + (input.Position.X - draggableStart.X), 0, startPos.Y + (input.Position.Y - draggableStart.Y));
+        mainFrame.Position = newUDim2(0, startPos.X + (input.Position.X - draggableStart.X), 0, startPos.Y + (input.Position.Y - draggableStart.Y));
     end;
 end);
 
@@ -64,10 +68,10 @@ mainFrame.topBarFrame.exitBtn.InputEnded:Connect(function(input)
 end);
 
 mainFrame.topBarFrame.exitBtn.MouseButton1Click:Connect(function()
-    mainFrame:TweenSize(UDim2.new(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    mainFrame:TweenSize(newUDim2(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
     wait(0.25);
-    mainFrame.topBarFrame:TweenSize(UDim2.new(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
-    mainFrame:TweenSize(UDim2.new(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    mainFrame.topBarFrame:TweenSize(newUDim2(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
+    mainFrame:TweenSize(newUDim2(0, 0, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25);
     wait(0.25);
     owlLibGui:Destroy();
 end);
@@ -85,10 +89,10 @@ mainFrame.topBarFrame.miniBtn.InputEnded:Connect(function(input)
 end);
 
 mainFrame.topBarFrame.miniBtn.MouseButton1Click:Connect(function()
-    if mainFrame.Size ~= UDim2.new(0, 387, 0, 27) then
-        mainFrame:TweenSize(UDim2.new(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
+    if mainFrame.Size ~= newUDim2(0, 387, 0, 27) then
+        mainFrame:TweenSize(newUDim2(0, 387, 0, 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
     else
-        mainFrame:TweenSize(UDim2.new(0, 387, 0, 225), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
+        mainFrame:TweenSize(newUDim2(0, 387, 0, 225), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.25, true);
     end;
 end);
 
@@ -101,7 +105,7 @@ end);
 function OwlLib:SetCategory() end;
 
 function OwlLib.Content:Resize(scrollingFrame)
-    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (#scrollingFrame:GetChildren() - 1) * 36);
+    scrollingFrame.CanvasSize = newUDim2(0, 0, 0, (#scrollingFrame:GetChildren() - 1) * 36);
 end;
 
 function OwlLib.Content:Ripple(btn)
@@ -112,21 +116,21 @@ function OwlLib.Content:Ripple(btn)
 		rippleEffect.BackgroundTransparency = 1;
 		rippleEffect.BorderSizePixel = 0;
 		rippleEffect.Image = "rbxassetid://2708891598";
-		rippleEffect.ImageColor3 = Color3.fromRGB(244, 244, 244);
+		rippleEffect.ImageColor3 = fromRGB(244, 244, 244);
 		rippleEffect.ImageTransparency = 0.7;
 		rippleEffect.ScaleType = Enum.ScaleType.Fit;
 		rippleEffectInner.Name = "rippleEffect";
 		rippleEffectInner.AnchorPoint = Vector2.new(0.5, 0.5);
 		rippleEffectInner.BackgroundTransparency = 1;
 		rippleEffectInner.BorderSizePixel = 0;
-		rippleEffectInner.Position = UDim2.new(0.5, 0, 0.5, 0);
-		rippleEffectInner.Size = UDim2.new(0.93, 0, 0.93, 0);
+		rippleEffectInner.Position = newUDim2(0.5, 0, 0.5, 0);
+		rippleEffectInner.Size = newUDim2(0.93, 0, 0.93, 0);
 		rippleEffectInner.Image = "rbxassetid://2708891598";
-		rippleEffectInner.ImageColor3 = Color3.fromRGB(45, 45, 45);
+		rippleEffectInner.ImageColor3 = fromRGB(45, 45, 45);
 		rippleEffectInner.ImageTransparency = 0.7;
 		rippleEffectInner.ScaleType = Enum.ScaleType.Fit;
-		rippleEffect.Position = UDim2.new(0, mouse.X - rippleEffect.AbsolutePosition.X, 0, mouse.Y - rippleEffect.AbsolutePosition.Y);
-		rippleEffect:TweenSizeAndPosition(UDim2.new(10, 0, 10, 0), UDim2.new(-4.5, 0, -4.5, 0), "Out", "Quad", 0.33);
+		rippleEffect.Position = newUDim2(0, mouse.X - rippleEffect.AbsolutePosition.X, 0, mouse.Y - rippleEffect.AbsolutePosition.Y);
+		rippleEffect:TweenSizeAndPosition(newUDim2(10, 0, 10, 0), newUDim2(-4.5, 0, -4.5, 0), "Out", "Quad", 0.33);
 		for i = 1, 10 do
 			rippleEffect.ImageTransparency = rippleEffect.ImageTransparency + 0.01;
 			wait();
@@ -163,23 +167,23 @@ function OwlLib:new(title)
 	local tabBtn = game:GetObjects("rbxassetid://4530456835")[1];
     tabBtn.Parent = mainFrame.tabsFrame;
     tabBtn.tabLabel.Text = title;
-    tabBtn.Size = UDim2.new(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
+    tabBtn.Size = newUDim2(0, tabBtn.tabLabel.TextBounds.X + 20, 1, 0, 0);
 
     if not firstBodyFrame then
         firstBodyFrame = self.bodyFrame;
         self.bodyFrame.Visible = true;
-		tabBtn.ImageColor3 = Color3.fromRGB(30, 30, 30);
+		tabBtn.ImageColor3 = fromRGB(30, 30, 30);
     end;
 
     --[[tabBtn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= Color3.fromRGB(50, 50, 50) then
-            tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(40, 40, 40)}):Play();
+        if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= fromRGB(50, 50, 50) then
+            tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = fromRGB(40, 40, 40)}):Play();
         end;
     end);
 
     tabBtn.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= Color3.fromRGB(50, 50, 50) then
-            tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(30, 30, 30)}):Play();
+        if input.UserInputType == Enum.UserInputType.MouseMovement and tabBtn.ImageColor3 ~= fromRGB(50, 50, 50) then
+            tweenService:Create(tabBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageColor3 = fromRGB(30, 30, 30)}):Play();
         end;
     end);]]
 
@@ -193,10 +197,10 @@ function OwlLib:new(title)
         end;
         for i, v in pairs(mainFrame.tabsFrame:GetChildren()) do
             if v:IsA("ImageButton") then
-                v.ImageColor3 = Color3.fromRGB(50, 50, 50);
+                v.ImageColor3 = fromRGB(50, 50, 50);
             end;
         end;
-        tabBtn.ImageColor3 = Color3.fromRGB(30, 30, 30);
+        tabBtn.ImageColor3 = fromRGB(30, 30, 30);
         self.bodyFrame.Visible = true;
     end);
 
@@ -215,14 +219,14 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
         local btn = game:GetObjects("rbxassetid://4531129509")[1];
         btn.Parent = self.bodyFrame;
         btn.titleLabel.Text = title;
-        btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-        btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
+        btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+        btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
 
         self:initBtnEffect(btn);
 
         local toggle = {
-            [true] = Color3.fromRGB(0, 194, 94),
-            [false] = Color3.fromRGB(180, 0, 0)
+            [true] = fromRGB(0, 194, 94),
+            [false] = fromRGB(180, 0, 0)
         };
 
         tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
@@ -251,8 +255,8 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
         local btn = game:GetObjects("rbxassetid://4531209476")[1];
         btn.Parent = self.bodyFrame;
         btn.titleLabel.Text = title;
-        btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-        btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 17, 0, 30);
+        btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+        btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 17, 0, 30);
 
         self:initBtnEffect(btn);
 
@@ -277,8 +281,8 @@ function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
     local sliderFrame = game:GetObjects("rbxassetid://4531326550")[1];
     sliderFrame.Parent = self.bodyFrame;
     sliderFrame.titleLabel.Text = title;
-    sliderFrame.titleLabel.Size = UDim2.new(0, sliderFrame.titleLabel.TextBounds.X, 1, 0);
-    sliderFrame.Size = UDim2.new(0, sliderFrame.titleLabel.Size.X.Offset + 195, 0, 30);
+    sliderFrame.titleLabel.Size = newUDim2(0, sliderFrame.titleLabel.TextBounds.X, 1, 0);
+    sliderFrame.Size = newUDim2(0, sliderFrame.titleLabel.Size.X.Offset + 195, 0, 30);
 
     local startPoint = config[title] and tonumber(config[title]) or startPoint;
 
@@ -286,12 +290,12 @@ function OwlLib.Content:newSlider(title, callback, min, max, startPoint)
     sliderIndicatorFrame.valueLabel.Text = tostring(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
 
     local slidingFrame = sliderFrame.sliderIndicatorFrame.slidingFrame;
-    slidingFrame.Size = UDim2.new((startPoint or 0) / max, 0, 1, 0);
+    slidingFrame.Size = newUDim2((startPoint or 0) / max, 0, 1, 0);
 
     callback(startPoint and math.floor((startPoint / max) * (max - min) + min) or 0);
 
     local function slide(input)
-        local pos = UDim2.new(math.clamp((input.Position.X - sliderIndicatorFrame.AbsolutePosition.X) / sliderIndicatorFrame.AbsoluteSize.X, 0, 1), 0, 1, 0);
+        local pos = newUDim2(clamp((input.Position.X - sliderIndicatorFrame.AbsolutePosition.X) / sliderIndicatorFrame.AbsoluteSize.X, 0, 1), 0, 1, 0);
         slidingFrame:TweenSize(pos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         local value = math.floor(((pos.X.Scale * max) / max) * (max - min) + min);
         sliderIndicatorFrame.valueLabel.Text = tostring(value);
@@ -326,8 +330,8 @@ function OwlLib.Content:newTextbox(title, callback, presetText, noCallbackOnStar
     local btn = game:GetObjects("rbxassetid://4531463561")[1];
     btn.Parent = self.bodyFrame;
     btn.titleLabel.Text = title;
-    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 100, 0, 30);
+    btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 100, 0, 30);
 
     local presetText = (config[title] and config[title]) or (presetText and presetText or "");
 
@@ -356,8 +360,8 @@ function OwlLib.Content:newBind(title, callback, presetKeyCode)
     local btn = game:GetObjects("rbxassetid://4531229816")[1];
     btn.Parent = self.bodyFrame;
     btn.titleLabel.Text = title;
-    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
+    btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
 
     btn.bindBtn.Text = presetKeyCode and string.upper(tostring(string.char(presetKeyCode.Value))) or "KEY";
 
@@ -445,8 +449,8 @@ function OwlLib.Content:newCBind(title, callback, presetKeyCode)
     local btn = game:GetObjects("rbxassetid://4531229816")[1];
     btn.Parent = self.bodyFrame;
     btn.titleLabel.Text = title;
-    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
+    btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 90, 0, 30);
 
     btn.bindBtn.Text = nm;
 
@@ -486,8 +490,8 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     local btn = game:GetObjects("rbxassetid://4531551348")[1];
     btn.Parent = self.bodyFrame;
     btn.titleLabel.Text = title;
-    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
+    btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 50, 0, 30);
 
     local colorFrame = btn.colorFrame;
     local colorPickingFrame = btn.colorPickingFrame;
@@ -497,10 +501,10 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     local hueSatIndicatorFrame = hueSatFrame.hueSatIndicatorFrame;
     local valueIndicatorFrame = valueFrame.valueIndicatorFrame;
 
-    local presetColor = presetColor and presetColor or Color3.fromRGB(255, 255, 255);
+    local presetColor = presetColor and presetColor or fromRGB(255, 255, 255);
     if config[title] then
         if config[title]["R"] then
-            presetColor = Color3.fromRGB(config[title]["R"], config[title]["G"], config[title]["B"]);
+            presetColor = fromRGB(config[title]["R"], config[title]["G"], config[title]["B"]);
         elseif config[title] == "Rainbow" then
             rainbow = true;
         end;
@@ -515,11 +519,11 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     btn.MouseButton1Click:Connect(function()
         if not colorPickingFrame.Visible then
             oldSize = self.bodyFrame.CanvasSize;
-            self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
+            self.bodyFrame.CanvasSize = oldSize + newUDim2(0, 0, 0, 170);
             colorPickingFrame.Visible = true;
-            colorPickingFrame:TweenSize(UDim2.new(0, 170, 0, 120), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            colorPickingFrame:TweenSize(newUDim2(0, 170, 0, 120), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif colorPickingFrame.Visible then
-            colorPickingFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            colorPickingFrame:TweenSize(newUDim2(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             colorPickingFrame.Visible = false;
             self.bodyFrame.CanvasSize = oldSize;
@@ -559,21 +563,21 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
             saveConfig();
         end;
     end);
-    
+
     game:GetService("UserInputService").InputChanged:Connect(function(input)
         if hueSatDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             rainbow = false;
-            hueSatIndicatorFrame.Position = UDim2.new(math.clamp((input.Position.X - hueSatFrame.AbsolutePosition.X) / hueSatFrame.AbsoluteSize.X, 0, 1), 0, math.clamp((input.Position.Y - hueSatFrame.AbsolutePosition.Y) / hueSatFrame.AbsoluteSize.Y, 0, 1), 0);
-            valueIndicatorFrame.BackgroundColor3 = Color3.fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
-            colorFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
-            valueFrame.ImageColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
+            hueSatIndicatorFrame.Position = newUDim2(clamp((input.Position.X - hueSatFrame.AbsolutePosition.X) / hueSatFrame.AbsoluteSize.X, 0, 1), 0, clamp((input.Position.Y - hueSatFrame.AbsolutePosition.Y) / hueSatFrame.AbsoluteSize.Y, 0, 1), 0);
+            valueIndicatorFrame.BackgroundColor3 = fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
+            colorFrame.BackgroundColor3 = fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
+            valueFrame.ImageColor3 = fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
             callback(colorFrame.BackgroundColor3);
         elseif valueDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             rainbow = false;
-            valueIndicatorFrame.Position = UDim2.new(0, 0, math.clamp((input.Position.Y - valueFrame.AbsolutePosition.Y) / valueFrame.AbsoluteSize.Y, 0, 1), 0);
-            valueIndicatorFrame.BackgroundColor3 = Color3.fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
-            colorFrame.BackgroundColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
-            valueFrame.ImageColor3 = Color3.fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
+            valueIndicatorFrame.Position = newUDim2(0, 0, clamp((input.Position.Y - valueFrame.AbsolutePosition.Y) / valueFrame.AbsoluteSize.Y, 0, 1), 0);
+            valueIndicatorFrame.BackgroundColor3 = fromHSV(h, 1 - (1 - hueSatIndicatorFrame.Position.Y.Scale), 1);
+            colorFrame.BackgroundColor3 = fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1 - valueIndicatorFrame.Position.Y.Scale);
+            valueFrame.ImageColor3 = fromHSV(hueSatIndicatorFrame.Position.X.Scale, 1 - hueSatIndicatorFrame.Position.Y.Scale, 1);
             callback(colorFrame.BackgroundColor3);
         end;
     end);
@@ -581,10 +585,10 @@ function OwlLib.Content:newColorPicker(title, callback, presetColor)
     spawn(function()
         while true do
             for i = 1, 230 do
-                rainbowBtn.TextColor3 = Color3.fromHSV(i / 230, 1, 1);
+                rainbowBtn.TextColor3 = fromHSV(i / 230, 1, 1);
                 if rainbow then
-                    colorFrame.BackgroundColor3 = Color3.fromHSV(i / 230, 1, 1);
-                    callback(Color3.fromHSV(i / 230, 1, 1));
+                    colorFrame.BackgroundColor3 = fromHSV(i / 230, 1, 1);
+                    callback(fromHSV(i / 230, 1, 1));
                 end;
                 wait();
             end;
@@ -600,8 +604,8 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
     local btn = game:GetObjects("rbxassetid://4531687341")[1];
     btn.Parent = self.bodyFrame;
     btn.titleLabel.Text = title;
-    btn.titleLabel.Size = UDim2.new(0, btn.titleLabel.TextBounds.X, 1, 0);
-    btn.Size = UDim2.new(0, btn.titleLabel.Size.X.Offset + 80, 0, 30);
+    btn.titleLabel.Size = newUDim2(0, btn.titleLabel.TextBounds.X, 1, 0);
+    btn.Size = newUDim2(0, btn.titleLabel.Size.X.Offset + 80, 0, 30);
 
     if not noCallbackOnStart then
         callback(config[title] and config[title] or list[1]);
@@ -644,7 +648,7 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
                 saveConfig();
                 callback(v);
                 arrowTween:Play();
-                bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+                bodyFrame:TweenSize(newUDim2(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
                 wait(0.15);
                 bodyFrame.Visible = false;
                 self.bodyFrame.CanvasSize = oldSize;
@@ -660,13 +664,13 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
     btn.MouseButton1Click:Connect(function()
         if not bodyFrame.Visible then
             oldSize = self.bodyFrame.CanvasSize;
-            self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
+            self.bodyFrame.CanvasSize = oldSize + newUDim2(0, 0, 0, 170);
             bodyFrame.Visible = true;
             arrowTween:Play();
-            bodyFrame:TweenSize(UDim2.new(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            bodyFrame:TweenSize(newUDim2(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif bodyFrame.Visible then
             arrowTween1:Play();
-            bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
+            bodyFrame:TweenSize(newUDim2(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             bodyFrame.Visible = false;
             self.bodyFrame.CanvasSize = oldSize;
