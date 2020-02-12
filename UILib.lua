@@ -623,23 +623,28 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
             btn.Text = v;
             btn.ZIndex = 2;
 
+            local btnHover = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5});
+            local btnHover1 = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1});
+
             btn.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
-                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
+                    btnHover:Play();
                 end;
             end);
 
             btn.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
-                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
+                    btnHover1:Play();
                 end;
             end);
+
+            local arrowTween = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180});
 
             btn.MouseButton1Click:Connect(function()
                 config[title] = v;
                 saveConfig();
                 callback(v);
-                tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+                arrowTween:Play();
                 bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
                 wait(0.15);
                 bodyFrame.Visible = false;
@@ -650,15 +655,18 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
 
     refresh(list);
 
+    local arrowTween = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180});
+    local arrowTween1 = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0});
+
     btn.MouseButton1Click:Connect(function()
         if not bodyFrame.Visible then
             oldSize = self.bodyFrame.CanvasSize;
             self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
             bodyFrame.Visible = true;
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
+            arrowTween:Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif bodyFrame.Visible then
-            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
+            arrowTween1:Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             bodyFrame.Visible = false;
