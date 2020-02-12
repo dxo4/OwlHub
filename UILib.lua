@@ -1,15 +1,12 @@
 local OwlLib = {Content = {}};
 local config = {};
 
-local placeID = tostring(game.PlaceId);
-local httpService = game:GetService("HttpService");
-
 pcall(function()
-    config = httpService:JSONDecode(readfile(placeID .. ".txt"));
+    config = game:GetService("HttpService"):JSONDecode(readfile(tostring(game.PlaceId) .. ".txt"));
 end);
 
 local function saveConfig()
-    writefile(placeID .. ".txt", httpService:JSONEncode(config));
+    writefile(tostring(game.PlaceId) .. ".txt", game:GetService("HttpService"):JSONEncode(config));
 end;
 
 local owlLibGui = game:GetObjects("rbxassetid://4530443679")[1];
@@ -23,8 +20,6 @@ local firstBodyFrame;
 local draggableToggle;
 local draggableInput;
 local draggableStart;
-
-local mouse = game:GetService("Players").LocalPlayer:GetMouse();
 
 mainFrame.topBarFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -42,26 +37,20 @@ end);
 
 inputService.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+        local res = owlLibGui.AbsoluteSize;
         mainFrame.Position = UDim2.new(0, startPos.X + (input.Position.X - draggableStart.X), 0, startPos.Y + (input.Position.Y - draggableStart.Y));
     end;
 end);
 
-local exitTween = tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0});
-local exitTween1 = tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2});
-local miniTween = tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0});
-local miniTween2 = tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2});
-local btnHover = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.85});
-local btnHover1 = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1});
-
 mainFrame.topBarFrame.exitBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        exitTween:Play();
+        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
     end;
 end);
 
 mainFrame.topBarFrame.exitBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        exitTween1:Play();
+        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
     end;
 end);
 
@@ -76,13 +65,13 @@ end);
 
 mainFrame.topBarFrame.miniBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        miniTween:Play();
+        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
     end;
 end);
 
 mainFrame.topBarFrame.miniBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        miniTween2:Play();
+        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
     end;
 end);
 
@@ -108,6 +97,7 @@ end;
 
 function OwlLib.Content:Ripple(btn)
     spawn(function()
+		local mouse = game:GetService("Players").LocalPlayer:GetMouse();
 		local rippleEffect = Instance.new("ImageLabel", btn);
 		local rippleEffectInner = Instance.new("ImageLabel", rippleEffect);
 		rippleEffect.Name = "rippleEffect";
@@ -140,13 +130,13 @@ end;
 function OwlLib.Content:initBtnEffect(btn)
     btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            btnHover:Play();
+            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.85}):Play();
         end;
     end);
 
     btn.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            btnHover1:Play();
+            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
         end;
     end);
 end;
@@ -224,16 +214,14 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
             [false] = Color3.fromRGB(180, 0, 0)
         };
 
-        local statusTween = tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]});
-
-        statusTween:Play();
+        tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
 
         btn.MouseButton1Click:Connect(function()
             self:Ripple(btn);
             enabled = not enabled;
             config[title] = enabled;
             saveConfig();
-            statusTween:Play();
+            tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
             callback(enabled);
         end);
 
@@ -243,7 +231,7 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
                 if not noToggle then
                     config[title] = enabled;
                     saveConfig();
-                    statusTween:Play();
+                    tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
                     callback(enabled);
                 end;
             end;
@@ -623,28 +611,23 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
             btn.Text = v;
             btn.ZIndex = 2;
 
-            local btnHover = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5});
-            local btnHover1 = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1});
-
             btn.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
-                    btnHover:Play();
+                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play();
                 end;
             end);
 
             btn.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
-                    btnHover1:Play();
+                    tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
                 end;
             end);
-
-            local arrowTween = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180});
 
             btn.MouseButton1Click:Connect(function()
                 config[title] = v;
                 saveConfig();
                 callback(v);
-                arrowTween:Play();
+                tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
                 bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
                 wait(0.15);
                 bodyFrame.Visible = false;
@@ -655,18 +638,15 @@ function OwlLib.Content:newDropdown(title, callback, list, noCallbackOnStart)
 
     refresh(list);
 
-    local arrowTween = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180});
-    local arrowTween1 = tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0});
-
     btn.MouseButton1Click:Connect(function()
         if not bodyFrame.Visible then
             oldSize = self.bodyFrame.CanvasSize;
             self.bodyFrame.CanvasSize = oldSize + UDim2.new(0, 0, 0, 170);
             bodyFrame.Visible = true;
-            arrowTween:Play();
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, (#bodyFrame:GetChildren() - 1) * 27), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
         elseif bodyFrame.Visible then
-            arrowTween1:Play();
+            tweenService:Create(arrowLabel, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
             bodyFrame:TweenSize(UDim2.new(0, 170, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true);
             wait(0.15);
             bodyFrame.Visible = false;
