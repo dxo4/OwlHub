@@ -1,12 +1,15 @@
 local OwlLib = {Content = {}};
 local config = {};
 
+local placeID = tostring(game.PlaceId);
+local httpService = game:GetService("HttpService");
+
 pcall(function()
-    config = game:GetService("HttpService"):JSONDecode(readfile(tostring(game.PlaceId) .. ".txt"));
+    config = httpService:JSONDecode(readfile(placeID .. ".txt"));
 end);
 
 local function saveConfig()
-    writefile(tostring(game.PlaceId) .. ".txt", game:GetService("HttpService"):JSONEncode(config));
+    writefile(placeID .. ".txt", httpService:JSONEncode(config));
 end;
 
 local owlLibGui = game:GetObjects("rbxassetid://4530443679")[1];
@@ -20,6 +23,8 @@ local firstBodyFrame;
 local draggableToggle;
 local draggableInput;
 local draggableStart;
+
+local mouse = game:GetService("Players").LocalPlayer:GetMouse();
 
 mainFrame.topBarFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -37,20 +42,26 @@ end);
 
 inputService.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-        local res = owlLibGui.AbsoluteSize;
         mainFrame.Position = UDim2.new(0, startPos.X + (input.Position.X - draggableStart.X), 0, startPos.Y + (input.Position.Y - draggableStart.Y));
     end;
 end);
 
+local exitTween = tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0});
+local exitTween1 = tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2});
+local miniTween = tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0});
+local miniTween2 = tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2});
+local btnHover = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.85});
+local btnHover1 = tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1});
+
 mainFrame.topBarFrame.exitBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
+        exitTween:Play();
     end;
 end);
 
 mainFrame.topBarFrame.exitBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        tweenService:Create(mainFrame.topBarFrame.exitBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
+        exitTween1:Play();
     end;
 end);
 
@@ -65,13 +76,13 @@ end);
 
 mainFrame.topBarFrame.miniBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play();
+        miniTween:Play();
     end;
 end);
 
 mainFrame.topBarFrame.miniBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement then
-        tweenService:Create(mainFrame.topBarFrame.miniBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0.2}):Play();
+        miniTween2:Play();
     end;
 end);
 
@@ -97,7 +108,6 @@ end;
 
 function OwlLib.Content:Ripple(btn)
     spawn(function()
-		local mouse = game:GetService("Players").LocalPlayer:GetMouse();
 		local rippleEffect = Instance.new("ImageLabel", btn);
 		local rippleEffectInner = Instance.new("ImageLabel", rippleEffect);
 		rippleEffect.Name = "rippleEffect";
@@ -130,13 +140,13 @@ end;
 function OwlLib.Content:initBtnEffect(btn)
     btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.85}):Play();
+            btnHover:Play();
         end;
     end);
 
     btn.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            tweenService:Create(btn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play();
+            btnHover1:Play();
         end;
     end);
 end;
@@ -214,14 +224,16 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
             [false] = Color3.fromRGB(180, 0, 0)
         };
 
-        tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+        local statusTween = tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]});
+
+        statusTween:Play();
 
         btn.MouseButton1Click:Connect(function()
             self:Ripple(btn);
             enabled = not enabled;
             config[title] = enabled;
             saveConfig();
-            tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+            statusTween:Play();
             callback(enabled);
         end);
 
@@ -231,7 +243,7 @@ function OwlLib.Content:newBtn(title, callback, noToggle)
                 if not noToggle then
                     config[title] = enabled;
                     saveConfig();
-                    tweenService:Create(btn.statusFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = toggle[enabled]}):Play();
+                    statusTween:Play();
                     callback(enabled);
                 end;
             end;
